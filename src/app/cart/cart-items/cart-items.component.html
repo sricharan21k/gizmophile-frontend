@@ -1,0 +1,197 @@
+<div *ngIf="cartItems.length === 0" class="p-28 bg-gray-50">
+  <h3>Your shopping cart is empty</h3>
+  <button class="button hover:bg-gray-500">Shop Now ></button>
+</div>
+
+<div *ngIf="cartItems.length !== 0">
+  <div class="px-4 pt-4 pb-px bg-gray-50">
+    <div
+      class="flex flex-row items-center justify-center bg-white py-4 rounded-lg"
+    >
+      <div class="items-baseline">
+        <input
+          type="checkbox"
+          class="shrink-0 ms-auto border-gray-200 rounded text-gray-700 focus:ring-gray-700"
+          [checked]="areAllSelected()"
+          (change)="toggleSelectAll()"
+        />
+      </div>
+      <div class="w-1/6 ps-4">All</div>
+      <div class="w-1/4 text-start">Product</div>
+      <div class="w-1/12 text-center">Price</div>
+      <div class="w-1/6 text-center">Quantity</div>
+      <div class="w-1/6 text-center">Total</div>
+      <div class="size-7 text-center"></div>
+    </div>
+
+    <div
+      class="flex flex-row items-center justify-center my-4 bg-white rounded-lg"
+      *ngFor="let cartItem of cartItems"
+    >
+      <div class="">
+        <input
+          type="checkbox"
+          class="shrink-0 mt-0.5 ms-auto border-gray-200 rounded text-gray-700 focus:ring-transparent disabled:opacity-50 disabled:pointer-events-none"
+          [checked]="cartItem.checked"
+          (change)="toggleCheckout(cartItem)"
+        />
+      </div>
+      <div class="w-1/6 p-4">
+        <a
+          [routerLink]="['/product', cartItem.item]"
+          [queryParams]="{
+            color: getColorId(cartItem),
+            variant: getVariantId(cartItem)
+          }"
+        >
+          <img [src]="getProductImage(cartItem)" alt="Product" class="w-1/2" />
+        </a>
+      </div>
+      <div class="w-1/4">
+        <a
+          [routerLink]="['/product', cartItem.item]"
+          [queryParams]="{
+            color: cartItem.color,
+            variant: cartItem.variant
+          }"
+        >
+          <h2 class="font-bold text-lg">
+            {{ cartItem.product.brand }} {{ cartItem.product.model }}
+          </h2>
+        </a>
+        <h3>
+          {{ cartItem.color }}
+          {{ cartItem.variant }}
+        </h3>
+      </div>
+      <div class="w-1/12 text-center">
+        <h2></h2>
+      </div>
+      <div class="w-1/6 text-center">
+        <div class="py-2 px-3 inline-block" data-hs-input-number>
+          <div class="flex items-center gap-x-1.5">
+            <button
+              type="button"
+              class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50"
+              data-hs-input-number-decrement
+              [ngClass]="{
+                'pointer-events-none opacity-50': cartItem.quantity <= 1
+              }"
+              (click)="decrementQuantity(cartItem)"
+            >
+              <svg
+                class="flex-shrink-0 size-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+              </svg>
+            </button>
+            <input
+              #input
+              class="p-0 m-4 w-6 bg-transparent border-0 text-gray-800 text-center focus:ring-0"
+              type="text"
+              min="1"
+              [value]="cartItem.quantity"
+              data-hs-input-number-input
+              readonly
+            />
+            <button
+              type="button"
+              class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+              data-hs-input-number-increment
+              (click)="incrementQuantity(cartItem)"
+            >
+              <svg
+                class="flex-shrink-0 size-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="M12 5v14" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="w-1/6 text-center">
+        <h2>{{ cartItem.itemValue | currency : "INR" }}</h2>
+        <h4 class="text-xs text-gray-600">
+          {{ cartItem.quantity }} x
+          {{ getPrice(cartItem.item, cartItem.variant) | currency : "INR" }}
+        </h4>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="flex justify-center items-center size-7 text-sm font-semibold rounded-full border border-transparent text-gray-800 hover:bg-gray-100"
+          (click)="removeItemFromCart(cartItem)"
+        >
+          <svg
+            class="flex-shrink-0 size-4"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pb-4 px-4 bg-gray-50 sticky bottom-0">
+    <div
+      class="flex flex-row bg-white p-8 rounded-lg"
+      *ngIf="cartItems.length != 0"
+    >
+      <div class="flex items-center justify-start w-1/2">
+        <button
+          class="px-4 text-lg border-r-2 hover:text-gray-500"
+          (click)="clearCart()"
+        >
+          Clear Cart
+        </button>
+        <p class="ms-4">
+          Selected {{ checkout() }} out of {{ cartItems.length }} items
+        </p>
+      </div>
+
+      <div class="flex items-center justify-end w-1/2">
+        <h2 class="me-8 text-xl">
+          Total: {{ cartValue() | currency : "INR" }}
+        </h2>
+        <a
+          class="text-xl hover:text-gray-500"
+          routerLink="checkout"
+          [ngClass]="{
+            'pointer-events-none text-gray-300': !checkout()
+          }"
+        >
+          Check Out({{ checkout() }})
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

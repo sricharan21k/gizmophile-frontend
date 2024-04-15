@@ -1,0 +1,66 @@
+<!-- Add relative class for positioning context -->
+<div class="relative w-full overflow-hidden">
+  <!-- Slides Wrapper -->
+  <div
+    class="flex transition-transform duration-700"
+    [ngStyle]="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }"
+  >
+    <div *ngFor="let slide of slides" class="flex-none w-full h-64">
+      <!-- Each Slide Content Here -->
+      <img [src]="'assets/' + slide" class="w-full h-full object-cover" />
+      <!-- <div class="bg-gray-400 p-80">Hello</div> -->
+    </div>
+  </div>
+
+  <!-- Navigation Arrows -->
+  <button
+    (click)="prevSlide()"
+    class="absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
+  >
+    &#10094;
+  </button>
+  <button
+    (click)="nextSlide()"
+    class="absolute right-0 top-1/2 z-10 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
+  >
+    &#10095;
+  </button>
+
+  <!-- Indicators -->
+  <div class="absolute bottom-0 w-full flex justify-center p-4">
+    <span
+      *ngFor="let slide of slides; let i = index"
+      (click)="goToSlide(i)"
+      class="cursor-pointer block h-2 w-2 bg-white rounded-full mx-1"
+      [class.bg-blue-500]="currentIndex === i"
+    ></span>
+  </div>
+</div>
+
+<div class="w-4/5 mx-auto">
+  <h2 class="text-2xl">Continue Browsing</h2>
+  <div class="grid grid-cols-4 gap-4">
+    <div
+      *ngFor="let product of browsedItems"
+      class="flex flex-row items-center"
+    >
+      <div class="flex items-center p-4 bg-white rounded-t-lg">
+        <div class="">
+          <a
+            [routerLink]="['/product', product.id]"
+            [queryParams]="{
+              color: product.colors[0],
+              variant: product.variants[0]
+            }"
+          >
+            <img class="w-44" [src]="getProductImage(product)" alt="" />
+          </a>
+        </div>
+
+        <div class="text-center text-lg">
+          {{ product.brand }} {{ product.model }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

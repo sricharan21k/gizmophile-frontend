@@ -1,0 +1,600 @@
+<!-- Added to wishlist toast -->
+<div
+  *ngIf="showSuccessToast"
+  class="fixed top-15 z-50 start-1/2 -translate-x-1/2 max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg"
+  role="alert"
+>
+  <div class="flex p-4">
+    <div class="flex-shrink-0">
+      <svg
+        class="flex-shrink-0 size-4 text-gray-700 mt-0.5"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+        />
+      </svg>
+    </div>
+    <div class="ms-3">
+      <p class="text-sm text-gray-700">Added to wishlist.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Removed from wishlist toast -->
+<div
+  *ngIf="showFailureToast"
+  class="fixed top-15 z-50 start-1/2 -translate-x-1/2 max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg"
+  role="alert"
+>
+  <div class="flex p-4">
+    <div class="flex-shrink-0">
+      <svg
+        class="flex-shrink-0 size-4 text-gray-700 mt-0.5"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+        />
+      </svg>
+    </div>
+    <div class="ms-3">
+      <p class="text-sm text-gray-700">Removed from wishlist.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Added to cart toast -->
+<div
+  *ngIf="showAddedToCartToast"
+  class="fixed top-15 z-50 start-1/2 -translate-x-1/2 max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg"
+  role="alert"
+>
+  <div class="flex p-4">
+    <div class="flex-shrink-0">
+      <svg
+        class="flex-shrink-0 size-4 text-gray-700 mt-0.5"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+        />
+      </svg>
+    </div>
+    <div class="ms-3">
+      <p class="text-sm text-gray-700">Added to cart!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="bg-gray-50 p-4">
+  <div class="bg-white/80 rounded-lg shadow-sm">
+    <ol class="flex items-center whitespace-nowrap p-4" aria-label="Breadcrumb">
+      <li class="inline-flex items-center">
+        <a
+          class="flex items-center text-sm text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600"
+          routerLink="/home"
+        >
+          Home
+        </a>
+        <svg
+          class="flex-shrink-0 size-5 text-gray-400"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path d="M6 13L10 3" stroke="currentColor" stroke-linecap="round" />
+        </svg>
+      </li>
+      <li class="inline-flex items-center">
+        <a
+          class="flex items-center text-sm text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600"
+          routerLink="/product-list/all"
+        >
+          All Products
+          <svg
+            *ngIf="productType !== 'all'"
+            class="flex-shrink-0 size-5 text-gray-400"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path d="M6 13L10 3" stroke="currentColor" stroke-linecap="round" />
+          </svg>
+        </a>
+      </li>
+      <li
+        *ngIf="productType !== 'all'"
+        class="inline-flex items-center text-sm font-medium text-gray-700 truncate"
+        aria-current="page"
+      >
+        {{
+          productType === "search"
+            ? toPascalCase(searchKeyword)
+            : toPascalCase(productType)
+        }}
+      </li>
+    </ol>
+
+    <h2 class="text-2xl mx-4 my-2">
+      {{
+        productType === "search"
+          ? toPascalCase(searchKeyword)
+          : productType === "all"
+          ? "All Products"
+          : toPascalCase(productType)
+      }}
+    </h2>
+
+    <ol
+      class="text-sm sm:text-lg md:text-xl flex items-center justify-between md:justify-normal md:gap-x-10 whitespace-nowrap px-4 py-2"
+      aria-label="Breadcrumb"
+    >
+      <li class="inline-flex items-center">
+        <button
+          class="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+          (click)="sort('id', 'desc')"
+        >
+          New
+        </button>
+      </li>
+      <li class="inline-flex items-center">
+        <button
+          class="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+          (click)="sort('rating', 'desc')"
+        >
+          Top rated
+        </button>
+      </li>
+      <li class="inline-flex items-center">
+        <button
+          class="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+          (click)="sort('orderCount', 'desc')"
+        >
+          Popular
+        </button>
+      </li>
+      <li class="inline-flex items-center">
+        <button
+          class="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+          (click)="sort('baseVariant', 'desc')"
+        >
+          Price
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-5 mx-1"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
+            />
+          </svg>
+        </button>
+      </li>
+      <li class="inline-flex items-center">
+        <button
+          class="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+          (click)="sort('baseVariant', 'asc')"
+        >
+          Price
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-5 mx-1"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+            />
+          </svg>
+        </button>
+      </li>
+      <li class="inline-flex items-center">
+        <button class="flex items-center">
+          <label class="cursor-pointer">
+            <input
+              type="checkbox"
+              class="shrink-0 my-auto border-gray-200 rounded text-gray-700 focus:ring-transparent disabled:opacity-50 disabled:pointer-events-none"
+              id="hs-default-checkbox"
+              [checked]="inStock"
+              (change)="filterByAvailability()"
+            />
+
+            <span class="text-gray-500 hover:text-gray-700">In stock</span>
+          </label>
+        </button>
+      </li>
+
+      <li class="inline-flex items-center">
+        <div class="relative">
+          <button
+            class="font-medium text-gray-500 p-2 hover:bg-gray-100 rounded-full"
+            (click)="toggleBrandDropdown()"
+            [ngClass]="{ 'bg-gray-100': showBrandDropdown }"
+          >
+            Brands
+          </button>
+          <div
+            @fadeInOut
+            *ngIf="showBrandDropdown"
+            class="absolute w-40 left-0 mt-4 bg-white shadow-md rounded-lg z-50"
+          >
+            <div
+              class="relative flex items-start py-2 px-3 rounded-lg hover:bg-gray-100"
+            >
+              <div class="flex items-center h-5 mt-1">
+                <input
+                  id="hs-dropdown-item-checkbox-delete"
+                  name="hs-dropdown-item-checkbox-delete"
+                  type="checkbox"
+                  class="shrink-0 border-gray-200 rounded text-gray-600 focus:ring-transparent disabled:opacity-50 disabled:pointer-events-none"
+                  [checked]="allBrandsSelected()"
+                  (change)="SelectAllBrands()"
+                />
+              </div>
+              <label
+                for="hs-dropdown-item-checkbox-delete"
+                class="ms-3.5 pointer-events-none select-text selection:hidden"
+              >
+                <span class="mt-1 block text-sm font-semibold text-gray-800"
+                  >All</span
+                >
+              </label>
+            </div>
+            <div
+              *ngFor="let brand of brands; let i = index"
+              class="relative flex items-start py-2 px-3 rounded-lg hover:bg-gray-100 select-none"
+            >
+              <div class="flex items-center h-5 mt-1">
+                <input
+                  id="hs-dropdown-item-checkbox-{{ i }}"
+                  type="checkbox"
+                  class="shrink-0 border-gray-200 rounded text-gray-600 focus:ring-transparent disabled:opacity-50 disabled:pointer-events-none"
+                  [checked]="brandSelected(brand)"
+                  (change)="selectBrand(brand)"
+                />
+              </div>
+              <label
+                for="hs-dropdown-item-checkbox-{{ i }}"
+                class="ms-3.5 pointer-events-none select-none"
+              >
+                <span class="mt-1 block text-sm font-semibold text-gray-800">{{
+                  brand
+                }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<!-- No products -->
+<div *ngIf="!selectedBrands.length" class="bg-gray-50">
+  <h2 class="text-3xl text-gray-600 text-center py-28">No products selected</h2>
+</div>
+
+<!-- Product cards -->
+<div
+  *ngIf="selectedBrands.length"
+  class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 bg-gray-50"
+>
+  <div
+    class="flex flex-col group bg-white/80 overflow-hidden rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-500 ease-in-out"
+    *ngFor="let product of products; let i = index"
+    [@slideUp]
+  >
+    <div *ngIf="dataLoaded">
+      <div
+        class="my-4 relative pt-[50%] sm:pt-[60%] lg:pt-[80%] rounded-t-xl overflow-hidden"
+      >
+        <a
+          [routerLink]="['/product', product.id]"
+          [queryParams]="{
+            variant: variantAndColor[product.id][0],
+            color: variantAndColor[product.id][1]
+          }"
+        >
+          <img
+            class="size-full absolute top-0 object-contain object-center scale-95 group-hover:scale-100 transition-transform duration-500 ease-in-out rounded-t-xl"
+            [src]="getProductImage(product.id)"
+            alt="Image Description"
+          />
+        </a>
+
+        <button
+          type="button"
+          class="absolute top-3 end-5 size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-200 hover:text-gray-600 active:text-gray-600 disabled:opacity-50 disabled:pointer-events-none"
+          (click)="toggleWishlistItem(product.id)"
+          [ngClass]="{ 'text-gray-700': checkLikedItem(product.id) }"
+        >
+          <svg
+            class="flex-shrink-0 size-5"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="p-4 text-gray-700 md:p-5 bg-white/30 backdrop-blur-md rounded-b-lg"
+      >
+        <h3 class="text-center text-xl font-bold text-gray-800">
+          {{ product.brand }} {{ product.model }}
+        </h3>
+        <div class="text-center text-lg text-gray-800">
+          {{ getProductPrice(product.id) | currency : "INR" }}
+        </div>
+        <div class="my-4 flex flex-row items-center justify-center gap-x-4">
+          <button
+            class="border rounded-full hover:bg-gray-50 focus:border-gray-700"
+            *ngFor="let color of getColors(product.id)"
+            (click)="selectProductColor(product.id, color)"
+            [ngClass]="{
+              'border-gray-700': isCurrentColor(product.id, color)
+            }"
+          >
+            <div class="">
+              <span
+                class="block p-2.5 m-1 bg-gray-400 rounded-full shadow opacity-90"
+                [ngStyle]="{ 'background-color': color }"
+              ></span>
+            </div>
+          </button>
+        </div>
+        <div class="flex flex-row items-center justify-center text-xs gap-x-2">
+          <button
+            class="p-2 border rounded-lg hover:bg-gray-50 focus:border-gray-700"
+            *ngFor="let variant of getVariants(product.id)"
+            (click)="selectProductVariant(product.id, variant)"
+            [ngClass]="{
+              'border-gray-700': isCurrentVariant(product.id, variant)
+            }"
+          >
+            {{ variant }}
+          </button>
+        </div>
+        <div
+          *ngIf="product.stock >= 1"
+          class="mt-8 mb-4 mx-4 grid grid-cols-2 gap-x-4"
+        >
+          <button
+            type="button"
+            class="py-2 text-sm font-semibold rounded-lg border border-transparent text-gray-600 bg-gray-100 hover:bg-gray-200"
+            (click)="addToCart(product.id)"
+          >
+            Add To Cart
+          </button>
+          <button
+            type="button"
+            class="py-2 text-sm font-semibold rounded-lg border border-transparent text-white bg-gray-700 hover:bg-gray-600"
+            (click)="buyNow(product.id)"
+          >
+            Buy now
+          </button>
+        </div>
+        <div *ngIf="product.stock <= 0" class="mt-8 mb-4 mx-4">
+          <h2 class="text-xl text-gray-700 text-center">Out of stock</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- product navigation -->
+<div class="bg-gray-50 p-4" *ngIf="selectedBrands.length && dataLoaded">
+  <nav
+    class="p-4 flex items-center justify-center gap-x-1 rounded-lg bg-white/80 shadow-sm"
+  >
+    <!--dropdown-->
+    <div
+      class="me-4 hs-dropdown relative inline-flex justify-center sm:justify-start [--placement:top-left]"
+    >
+      <button
+        id="hs-pagination-dropdown"
+        type="button"
+        class="hs-dropdown-toggle p-2 inline-flex items-center gap-x-1 text-sm rounded-lg border border-gray-200 text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+      >
+        {{ pageSize }} page
+        <svg
+          class="flex-shrink-0 size-4"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+      <div
+        class="hs-dropdown-menu hs-dropdown-open:opacity-100 w-48 hidden z-50 transition-[margin,opacity] opacity-0 duration-300 mb-2 bg-white shadow-md rounded-lg p-2"
+        aria-labelledby="hs-pagination-dropdown"
+      >
+        <button
+          data-value="2"
+          type="button"
+          class="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+          (click)="getPageOfSize($event)"
+        >
+          2 page
+          <svg
+            *ngIf="pageSize === 2"
+            class="ms-auto flex-shrink-0 size-4 text-blue-600"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </button>
+        <button
+          data-value="6"
+          type="button"
+          class="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+          (click)="getPageOfSize($event)"
+        >
+          6 page
+          <svg
+            class="ms-auto flex-shrink-0 size-4 text-blue-600"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </button>
+        <button
+          data-value="10"
+          type="button"
+          class="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+          (click)="getPageOfSize($event)"
+        >
+          10 page
+          <svg
+            *ngIf="pageSize === 10"
+            class="ms-auto flex-shrink-0 size-4 text-blue-600"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!--pagination-->
+    <button
+      [disabled]="currentPage == 0"
+      type="button"
+      class="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+      (click)="getPage(currentPage - 1, pageSize, sortBy, sortOrder)"
+    >
+      <svg
+        aria-hidden="true"
+        class="hidden flex-shrink-0 size-3.5"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m15 18-6-6 6-6" />
+      </svg>
+      <span class="select-none">Previous</span>
+    </button>
+    <div class="flex items-center gap-x-1">
+      <button
+        [ngClass]="{
+          'bg-gray-100 py-2 px-3 text-sm rounded-lg': currentPage === pageNumber
+        }"
+        *ngFor="let pageNumber of getPageNumbers()"
+        (click)="getPage(pageNumber, pageSize, sortBy, sortOrder)"
+        type="button"
+        class="min-h-[38px] min-w-[38px] flex justify-center items-center text-gray-800 hover:bg-gray-100 hover:rounded-lg py-2 px-3 text-sm rounded-lg focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none select-none"
+        aria-current="page"
+      >
+        {{ pageNumber + 1 }}
+      </button>
+    </div>
+    <button
+      [disabled]="currentPage == getPageNumbers().length - 1"
+      type="button"
+      class="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+      (click)="getPage(currentPage + 1, pageSize, sortBy, sortOrder)"
+    >
+      <span class="select-none">Next</span>
+      <svg
+        aria-hidden="true"
+        class="hidden flex-shrink-0 size-3.5"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m9 18 6-6-6-6" />
+      </svg>
+    </button>
+
+    <!--jumper-->
+    <div class="flex justify-center sm:justify-start items-center gap-x-2 ms-4">
+      <span class="text-sm text-gray-800 whitespace-nowrap select-none">
+        Jump to
+      </span>
+      <input
+        (keyup.enter)="jumpToPage($event)"
+        type="number"
+        id="jump-to-page"
+        class="p-2 block w-12 border-gray-200 rounded-lg text-sm text-center focus:border-gray-500 focus:ring-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:pointer-events-none"
+      />
+      <!-- <span class="text-sm text-gray-800 whitespace-nowrap"> page </span> -->
+    </div>
+  </nav>
+</div>

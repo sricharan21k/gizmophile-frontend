@@ -1,0 +1,812 @@
+<div class="p-4 bg-gray-50">
+  <div class="flex">
+    <div class="w-1/2 mr-4 px-8 py-4 bg-white rounded-lg">
+      <h2 class="text-xl my-2">Delivery address</h2>
+
+      <div class="flex gap-4">
+        <div class="bg-gray-50 rounded-lg w-2/3">
+          <div class="flex items-center border-b p-2">
+            <div class="text-xl">{{ deliveryAddress?.addressType }}</div>
+            <div
+              (click)="populateAddressData()"
+              class="hover:bg-gray-100 rounded-full p-2 ms-auto cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-5 text-gray-600"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="p-4">
+            <div>
+              {{ deliveryAddress?.house }} {{ deliveryAddress?.landmark }}
+            </div>
+            <div>{{ deliveryAddress?.street }}</div>
+            <div>
+              {{ deliveryAddress?.city }} - {{ deliveryAddress?.zipcode }}
+            </div>
+            <div>
+              {{ deliveryAddress?.state }}, {{ deliveryAddress?.country }}
+            </div>
+            <div>{{ deliveryAddress?.directions }}</div>
+          </div>
+        </div>
+        <div
+          (click)="openAddAddressModal()"
+          class="m-auto bg-gray-50 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 cursor-pointer"
+        >
+          <div class="w-min">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1"
+              stroke="currentColor"
+              class="size-16"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="my-2 hs-collapse-toggle py-3 px-4 inline-flex items-center gap-x-2 font-semibold rounded-lg border border-transparent text-gray-700 bg-gray-50"
+        id="hs-basic-collapse"
+        (click)="toggleCollapse()"
+      >
+        Addresses
+        <svg
+          class="hs-collapse-open:rotate-180 flex-shrink-0 size-4 text-gray-700"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+
+      <div class="grid grid-cols-2 gap-4 p-4" *ngIf="showAddressList">
+        <div
+          *ngFor="let address of addressList"
+          class="p-4 text-sm border rounded-lg cursor-pointer hover:bg-gray-50"
+          (click)="setDeliveryAddress(address)"
+          [ngClass]="{ 'border-gray-700': deliveryAddressId === address.id }"
+        >
+          <div class="text-lg">{{ address.addressType }}</div>
+          <div>{{ address.house }}</div>
+          <div>{{ address.street }}</div>
+          <div>{{ address.city }} - {{ address.zipcode }}</div>
+          <div>{{ address.state }}, {{ address.country }}</div>
+        </div>
+      </div>
+
+      <h2 class="text-xl my-2">Delivery method</h2>
+      <div class="flex text-center gap-x-4 mb-4">
+        <div
+          class="w-1/2 py-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+          (click)="speedDelivery = false"
+          [ngClass]="{ 'border-gray-700': !speedDelivery }"
+        >
+          Standard delivery
+        </div>
+        <div
+          class="w-1/2 py-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+          (click)="speedDelivery = true"
+          [ngClass]="{ 'border-gray-700': speedDelivery }"
+        >
+          Speed delivery
+        </div>
+      </div>
+      <h2 class="text-xl my-2">Payment method</h2>
+      <div class="flex text-center gap-x-4">
+        <div
+          class="w-1/2 py-3 border border-gray-700 rounded-lg hover:bg-gray-50 cursor-pointer"
+        >
+          Pay on delivery
+        </div>
+        <div
+          class="w-1/2 py-3 border rounded-lg cursor-not-allowed text-gray-300"
+        >
+          Credit card
+        </div>
+      </div>
+    </div>
+    <div class="w-1/2 px-8 py-4 bg-white rounded-lg flex flex-col">
+      <h2 class="text-xl my-2 flex">
+        Order Summary
+        <span class="ms-auto text-lg">{{ items.length }} item(s)</span>
+      </h2>
+      <div class="my-4 me-4">
+        <div *ngFor="let item of items" class="">
+          <div class="flex gap-x-4">
+            <div class="w-1/5 p-4">
+              <img [src]="getProductImage(item)" alt="" class="" />
+            </div>
+            <div class="my-auto">
+              <h3>{{ item.product.brand }} {{ item.product.model }}</h3>
+              <div class="text-gray-600">{{ item.color }}</div>
+              <div class="text-gray-600">{{ item.variant }}</div>
+            </div>
+            <div class="ms-auto my-auto">
+              {{ item.itemValue | currency : "INR" }}
+              <div class="text-xs text-gray-500">
+                {{
+                  getProductPrice(item.item, item.variant) | currency : "INR"
+                }}
+                x
+                {{ item.quantity }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-auto">
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <div class="flex mb-2">
+            Subtotal:
+            <span class="ms-auto">{{ subtotal() | currency : "INR" }}</span>
+          </div>
+
+          <div class="flex mb-4">
+            Shipping fee:
+            <span class="ms-auto">{{
+              shippingCharges() | currency : "INR"
+            }}</span>
+          </div>
+
+          <div class="flex">
+            Total:
+            <span class="ms-auto text-lg">{{
+              total() | currency : "INR"
+            }}</span>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <button
+            *ngIf="!confirmOrder"
+            (click)="openPaymentModal()"
+            type="button"
+            class="mt-4 w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 font-semibold rounded-lg text-white bg-gray-700 shadow-sm hover:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none"
+          >
+            Place Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- add address modal -->
+<div
+  *ngIf="showAddAddressModal"
+  id="address-modal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-y-auto px-4 py-6 z-[100]"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-lg max-h-full"
+  >
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-medium text-gray-900">Modal Title</h3>
+        <button
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5"
+          (click)="closeAddAddressModal()"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <form [formGroup]="newAddressForm" (ngSubmit)="addAddress()">
+        <div class="mt-6 grid gap-4 lg:gap-6">
+          <div>
+            <label
+              for="house-number"
+              class="block mb-2 text-sm text-gray-700 font-medium"
+              >House / Flat / Building</label
+            >
+            <input
+              formControlName="house"
+              type="text"
+              id="house-number"
+              autocomplete="text"
+              class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+            />
+          </div>
+          <div>
+            <label
+              for="street-address"
+              class="block mb-2 text-sm text-gray-700 font-medium"
+              >Area / Street / Locality</label
+            >
+            <input
+              formControlName="street"
+              type="text"
+              id="street-address"
+              class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+            <div>
+              <label
+                for="country-name"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+                >Country</label
+              >
+              <input
+                formControlName="country"
+                type="text"
+                id="country-name"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+            <div>
+              <label
+                for="state-name"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+                >State</label
+              >
+              <input
+                formControlName="state"
+                type="text"
+                id="state-name"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+
+            <div>
+              <label
+                for="city-name"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+                >City / Town / Village</label
+              >
+              <input
+                formControlName="city"
+                type="text"
+                id="city-name"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+            <div>
+              <label
+                for="zipcode-number"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+                >Zipcode</label
+              >
+              <input
+                formControlName="zipcode"
+                type="text"
+                id="zipcode-number"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+          </div>
+          <!-- End Grid -->
+
+          <!-- Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+            <div>
+              <label
+                for="landmark"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+              >
+                Landmark</label
+              >
+              <input
+                formControlName="landmark"
+                type="text"
+                id="landmark"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+            <div>
+              <label for="address-type" class="block text-sm font-medium mb-2"
+                >Address type</label
+              >
+              <select
+                formControlName="addressType"
+                id="address-type"
+                class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              >
+                <option class="p-2 hover:bg-gray-500" selected>Home</option>
+                <option>Work</option>
+                <option>Friends & Family</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <!-- End Grid -->
+
+          <div>
+            <label
+              for="directions"
+              class="block mb-2 text-sm text-gray-700 font-medium"
+              >Directions / Additional details</label
+            >
+            <textarea
+              formControlName="directions"
+              id="directions"
+              rows="3"
+              class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+            ></textarea>
+          </div>
+        </div>
+        <!-- End Grid -->
+
+        <!-- Checkbox -->
+        <div class="mt-3 flex">
+          <div class="flex">
+            <input
+              formControlName="isDefault"
+              id="remember-me"
+              type="checkbox"
+              class="shrink-0 mt-1.5 border-gray-200 rounded text-gray-600 pointer-events-auto focus:ring-gray-500"
+            />
+          </div>
+          <div class="ms-3">
+            <label for="remember-me" class="text-sm text-gray-600"
+              >Set default
+            </label>
+          </div>
+        </div>
+        <!-- End Checkbox -->
+
+        <div class="mt-6 grid">
+          <button
+            type="submit"
+            class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-600 text-white hover:bg-gray-700 disabled:opacity-50 disabled:pointer-events-none"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 border-t border-gray-200">
+      <div class="flex justify-end space-x-2">
+        <button
+          class="px-4 py-2 bg-transparent rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-400"
+        >
+          Close
+        </button>
+        <button class="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-400">
+          Post review
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit address modal -->
+<div
+  *ngIf="showEditAddressModal"
+  id="address-modal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-y-auto px-4 py-6 z-[100]"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-lg max-h-full"
+  >
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-medium text-gray-900">Modal Title</h3>
+        <button
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5"
+          (click)="closeEditAddressModal()"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <form [formGroup]="addressForm" (ngSubmit)="updateAddress()">
+        <div class="mt-6 grid gap-4 lg:gap-6">
+          <div>
+            <label
+              for="house-number"
+              class="block mb-2 text-sm text-gray-700 font-medium"
+              >House / Flat / Building</label
+            >
+            <input
+              formControlName="house"
+              type="text"
+              id="house-number"
+              autocomplete="text"
+              class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+            />
+          </div>
+          <div>
+            <label
+              for="street-address"
+              class="block mb-2 text-sm text-gray-700 font-medium"
+              >Area / Street / Locality</label
+            >
+            <input
+              formControlName="street"
+              type="text"
+              id="street-address"
+              class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+            <div>
+              <label
+                for="country-name"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+                >Country</label
+              >
+              <input
+                formControlName="country"
+                type="text"
+                id="country-name"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+            <div>
+              <label
+                for="state-name"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+                >State</label
+              >
+              <input
+                formControlName="state"
+                type="text"
+                id="state-name"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+
+            <div>
+              <label
+                for="city-name"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+                >City / Town / Village</label
+              >
+              <input
+                formControlName="city"
+                type="text"
+                id="city-name"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+            <div>
+              <label
+                for="zipcode-number"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+                >Zipcode</label
+              >
+              <input
+                formControlName="zipcode"
+                type="text"
+                id="zipcode-number"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+          </div>
+          <!-- End Grid -->
+
+          <!-- Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+            <div>
+              <label
+                for="landmark"
+                class="block mb-2 text-sm text-gray-700 font-medium"
+              >
+                Landmark</label
+              >
+              <input
+                formControlName="landmark"
+                type="text"
+                id="landmark"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              />
+            </div>
+            <div>
+              <label for="address-type" class="block text-sm font-medium mb-2"
+                >Address type</label
+              >
+              <select
+                formControlName="addressType"
+                id="address-type"
+                class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+              >
+                <option class="p-2 hover:bg-gray-500" selected>Home</option>
+                <option>Work</option>
+                <option>Friends & Family</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <!-- End Grid -->
+
+          <div>
+            <label
+              for="directions"
+              class="block mb-2 text-sm text-gray-700 font-medium"
+              >Directions / Additional details</label
+            >
+            <textarea
+              formControlName="directions"
+              id="directions"
+              rows="3"
+              class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+            ></textarea>
+          </div>
+        </div>
+        <!-- End Grid -->
+
+        <!-- Checkbox -->
+        <div class="mt-3 flex">
+          <div class="flex">
+            <input
+              formControlName="isDefault"
+              id="remember-me"
+              type="checkbox"
+              class="shrink-0 mt-1.5 border-gray-200 rounded text-gray-600 pointer-events-auto focus:ring-gray-500"
+            />
+          </div>
+          <div class="ms-3">
+            <label for="remember-me" class="text-sm text-gray-600"
+              >Set default
+            </label>
+          </div>
+        </div>
+        <!-- End Checkbox -->
+
+        <div class="mt-6 grid">
+          <button
+            type="submit"
+            class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-600 text-white hover:bg-gray-700 disabled:opacity-50 disabled:pointer-events-none"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 border-t border-gray-200">
+      <div class="flex justify-end space-x-2">
+        <button
+          class="px-4 py-2 bg-transparent rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-400"
+        >
+          Close
+        </button>
+        <button class="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-400">
+          Post review
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit payment modal -->
+
+<div
+  *ngIf="showPaymentModal"
+  id="address-modal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-y-auto px-4 py-6 z-[100]"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-lg max-h-full"
+  >
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-medium text-gray-900">Place Order</h3>
+        <button
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5"
+          (click)="closePaymentModal()"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="overflow-y-auto p-4">
+      <div class="text-center">
+        <div *ngIf="!otpVerified" class="text-gray-500">
+          Verify OTP to place order!
+        </div>
+        <div class="my-6 w-2/3 mx-auto">
+          <div *ngIf="showEmail">
+            {{ hiddenEmail() }}
+          </div>
+          <div class="my-4">
+            <div *ngIf="showSendOtpButton">
+              <button
+                (click)="sendOtp()"
+                class="ms-auto p-2 hover:bg-gray-200 rounded-lg"
+              >
+                Send OTP
+              </button>
+            </div>
+            <div
+              *ngIf="showSpinner"
+              class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-gray-600 rounded-full"
+              role="status"
+              aria-label="loading"
+            >
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showOTPInput" class="w-4/5 my-4 text-center mx-auto">
+        <div class="my-4">OTP sent successfully!</div>
+        <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+          <div class="flex space-x-3" data-hs-pin-input>
+            <input
+              #otp1
+              (keyup)="onOtpInput($event, otp2, undefined)"
+              formControlName="num1"
+              type="text"
+              class="block w-[38px] text-center border-gray-200 rounded-md text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
+              placeholder="⚬"
+              maxlength="1"
+              data-hs-pin-input-item
+            />
+            <input
+              #otp2
+              (keyup)="onOtpInput($event, otp3, otp1)"
+              formControlName="num2"
+              type="text"
+              class="block w-[38px] text-center border-gray-200 rounded-md text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
+              placeholder="⚬"
+              maxlength="1"
+              data-hs-pin-input-item
+            />
+            <input
+              #otp3
+              (keyup)="onOtpInput($event, otp4, otp2)"
+              formControlName="num3"
+              type="text"
+              class="block w-[38px] text-center border-gray-200 rounded-md text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
+              placeholder="⚬"
+              maxlength="1"
+              data-hs-pin-input-item
+            />
+            <input
+              #otp4
+              (keyup)="onOtpInput($event, otp5, otp3)"
+              formControlName="num4"
+              type="text"
+              class="block w-[38px] text-center border-gray-200 rounded-md text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
+              placeholder="⚬"
+              maxlength="1"
+              data-hs-pin-input-item
+            />
+            <input
+              #otp5
+              (keyup)="onOtpInput($event, otp6, otp4)"
+              formControlName="num5"
+              type="text"
+              class="block w-[38px] text-center border-gray-200 rounded-md text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
+              placeholder="⚬"
+              maxlength="1"
+              data-hs-pin-input-item
+            />
+            <input
+              #otp6
+              (keyup)="onOtpInput($event, undefined, otp5)"
+              formControlName="num6"
+              type="text"
+              class="block w-[38px] text-center border-gray-200 rounded-md text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
+              placeholder="⚬"
+              maxlength="1"
+              data-hs-pin-input-item
+            />
+            <input
+              type="submit"
+              name="Verify"
+              id=""
+              value="Verify"
+              class="px-2 text-gray-700 font-semibold bg-gray-200 hover:bg-gray-100 cursor-pointer rounded-lg"
+            />
+          </div>
+        </form>
+        <div class="my-4 text-gray-600">{{ displayTime }}</div>
+      </div>
+      <div *ngIf="showExpired" class="text-center my-4">
+        OTP expired!
+        <button (click)="sendOtp()" class="underline">Resend</button>
+      </div>
+      <div *ngIf="otpVerified" class="text-center text-lg">
+        <div>OTP successfully verified!</div>
+      </div>
+      <div *ngIf="otpNotVerified" class="text-center text-lg">
+        <div class="">OTP verification failed!</div>
+
+        <button
+          (click)="retry()"
+          class="ms-auto p-2 hover:bg-gray-200 rounded-lg"
+        >
+          Retry
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 border-t border-gray-200">
+      <div class="flex justify-end space-x-2">
+        <button
+          class="px-4 py-2 bg-transparent rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-400"
+        >
+          Close
+        </button>
+        <button
+          [disabled]="!otpVerified"
+          (click)="placeOrder()"
+          class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-400 disabled:pointer-events-none disabled:opacity-50"
+        >
+          Proceed
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

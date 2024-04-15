@@ -1,0 +1,1073 @@
+<!-- Toast -->
+<div
+  *ngIf="ratingChanged"
+  class="fixed top-15 z-50 start-1/2 -translate-x-1/2 max-w-xs text-center bg-white border border-gray-200 rounded-xl shadow-lg"
+  role="alert"
+>
+  <div class="flex p-4">
+    <div class="flex-shrink-0">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z"
+        />
+      </svg>
+    </div>
+    <div class="ms-3">
+      <p class="text-sm text-gray-700">Thanks for rating.</p>
+    </div>
+  </div>
+</div>
+
+<div class="bg-gray-50 pb-4">
+  <div class="w-2/3 mx-auto">
+    <div class="flex items-center gap-x-4 mx-4 p-4 bg-white rounded-lg">
+      <a
+        class="inline-flex items-center text-gray-800 hover:text-gray-600 hover:bg-gray-100 p-1 rounded-full"
+        routerLink="/profile/orders"
+      >
+        <svg
+          class="flex-shrink-0 size-4"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          class="size-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </a>
+      <div class="text-xl text-gray-700 font-medium">
+        {{ order?.status }}
+        <span class="ms-1 text-gray-500 text-lg">
+          {{ order?.deliveryDate | date : "MMMM dd, yyyy 'at' h a" }}
+        </span>
+      </div>
+      <div class="ms-auto">Invoice</div>
+    </div>
+  </div>
+
+  <div class="w-2/3 mx-auto">
+    <!-- Stepper -->
+    <div class="m-4 p-8 bg-white rounded-lg">
+      <ul class="relative flex flex-row gap-x-2 ms-14">
+        <!-- Item -->
+        <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
+          <div
+            class="min-w-7 min-h-7 inline-flex justify-center items-center text-xs align-middle"
+          >
+            <span
+              class="size-7 flex justify-center items-center flex-shrink-0 bg-white-100 border border-gray-200 font-medium rounded-full"
+              [ngClass]="{
+                'bg-gray-700 text-white': activeStep >= 1
+              }"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m4.5 12.75 6 6 9-13.5"
+                />
+              </svg>
+            </span>
+            <span class="ms-2 block text-sm font-medium"> Placed </span>
+          </div>
+          <div
+            class="w-full h-px flex-1 bg-gray-200 group-last:hidden"
+            [ngClass]="{
+              'bg-gray-700 ': activeStep >= 2
+            }"
+          ></div>
+        </li>
+        <!-- End Item -->
+
+        <!-- Item -->
+        <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
+          <div
+            class="min-w-7 min-h-7 inline-flex justify-center items-center text-xs align-middle"
+          >
+            <span
+              class="size-7 flex justify-center items-center flex-shrink-0 border bg-white-100 rounded-full"
+              [ngClass]="{
+                'bg-gray-700 text-white': activeStep >= 2
+              }"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m4.5 12.75 6 6 9-13.5"
+                />
+              </svg>
+            </span>
+            <span class="ms-2 block text-sm font-medium"> Packed </span>
+          </div>
+          <div
+            class="w-full h-px flex-1 bg-gray-200 group-last:hidden"
+            [ngClass]="{
+              'bg-gray-700 ': activeStep >= 3
+            }"
+          ></div>
+        </li>
+        <!-- End Item -->
+
+        <!-- Item -->
+        <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
+          <div
+            class="min-w-7 min-h-7 inline-flex justify-center items-center text-xs align-middle"
+          >
+            <span
+              class="size-7 flex justify-center items-center flex-shrink-0 border bg-white-100 rounded-full"
+              [ngClass]="{
+                'bg-gray-700 text-white': activeStep >= 3
+              }"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m4.5 12.75 6 6 9-13.5"
+                />
+              </svg>
+            </span>
+            <span class="ms-2 block text-sm font-medium"> Shipped </span>
+          </div>
+          <div
+            class="w-full h-px flex-1 bg-gray-200 group-last:hidden"
+            [ngClass]="{
+              'bg-gray-700 ': activeStep >= 3
+            }"
+          ></div>
+        </li>
+        <!-- End Item -->
+
+        <!-- Item -->
+        <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
+          <div
+            class="min-w-7 min-h-7 inline-flex justify-center items-center text-xs align-middle"
+          >
+            <span
+              class="size-7 flex justify-center items-center flex-shrink-0 border bg-white-100 font-medium rounded-full"
+              [ngClass]="{
+                'bg-gray-700 text-white': activeStep == 4
+              }"
+            >
+              <svg
+                *ngIf="order?.status === 'CANCELED'"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
+              <svg
+                *ngIf="order?.status !== 'CANCELED'"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m4.5 12.75 6 6 9-13.5"
+                />
+              </svg>
+            </span>
+            <span class="ms-2 block text-sm font-medium">
+              <span *ngIf="order?.status !== 'CANCELED'">Deliverd</span>
+              <span *ngIf="order?.status === 'CANCELED'">Canceled</span>
+            </span>
+          </div>
+        </li>
+        <!-- End Item -->
+      </ul>
+    </div>
+  </div>
+
+  <div class="w-2/3 mx-auto">
+    <div *ngFor="let item of order?.items">
+      <div class="m-4">
+        <div
+          class="flex flex-row items-center gap-x-8 p-4 text-sm bg-white"
+          [ngClass]="{
+            'border-b rounded-t-lg':
+              item.returnedQuantity || item.replacedQuantity,
+            'rounded-lg': !item.returnedQuantity && !item.replacedQuantity
+          }"
+        >
+          <div class="p-4">
+            <img class="w-20" [src]="getProductImage(item)" alt="" />
+          </div>
+          <div class="">
+            {{ item.itemName }}
+            <div class="text-xs text-gray-600">
+              {{ item.color }} {{ item.variant }}
+            </div>
+          </div>
+          <div>{{ item.price | currency : "INR" }} x {{ item.quantity }}</div>
+          <div>{{ item.itemValue | currency : "INR" }}</div>
+
+          <div
+            *ngIf="order?.status === 'DELIVERED'"
+            class="mx-auto flex flex-row-reverse justify-end items-center"
+          >
+            <input
+              (change)="rateOrderItem(5, item.id)"
+              id="hs-ratings-1"
+              type="radio"
+              class="-ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+            />
+            <label
+              for="hs-ratings-1"
+              class="text-gray-300"
+              [ngClass]="{ 'text-gray-700': item.rating === 5 }"
+            >
+              <svg
+                class="flex-shrink-0 size-5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                />
+              </svg>
+            </label>
+            <input
+              (change)="rateOrderItem(4, item.id)"
+              id="hs-ratings-2"
+              type="radio"
+              class="-ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+            />
+            <label
+              for="hs-ratings-2"
+              class="text-gray-300"
+              [ngClass]="{ 'text-gray-700': (item?.rating ?? 0) >= 4 }"
+            >
+              <svg
+                class="flex-shrink-0 size-5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                />
+              </svg>
+            </label>
+            <input
+              (change)="rateOrderItem(3, item.id)"
+              id="hs-ratings-3"
+              type="radio"
+              class="-ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+            />
+            <label
+              for="hs-ratings-3"
+              class="text-gray-300"
+              [ngClass]="{ 'text-gray-700': (item?.rating ?? 0) >= 3 }"
+            >
+              <svg
+                class="flex-shrink-0 size-5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                />
+              </svg>
+            </label>
+            <input
+              (change)="rateOrderItem(2, item.id)"
+              id="hs-ratings-4"
+              type="radio"
+              class="-ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+            />
+            <label
+              for="hs-ratings-4"
+              class="text-gray-300"
+              [ngClass]="{ 'text-gray-700': (item?.rating ?? 0) >= 2 }"
+            >
+              <svg
+                class="flex-shrink-0 size-5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                />
+              </svg>
+            </label>
+            <input
+              (change)="rateOrderItem(1, item.id)"
+              id="hs-ratings-5"
+              type="radio"
+              class="-ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+            />
+            <label
+              for="hs-ratings-5"
+              class="text-gray-300"
+              [ngClass]="{ 'text-gray-700': (item?.rating ?? 0) >= 1 }"
+            >
+              <svg
+                class="flex-shrink-0 size-5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                />
+              </svg>
+            </label>
+          </div>
+          <div *ngIf="order?.status === 'DELIVERED'">
+            <button
+              *ngIf="!item.isReviewed"
+              (click)="openModal(item.id, item.type)"
+              type="button"
+              class="p-2 text-gray-600 font-semibold rounded-lg border border-transparent bg-gray-100 hover:bg-gray-200"
+            >
+              Write a review
+            </button>
+            <button
+              (click)="viewReview(item.id)"
+              *ngIf="item.isReviewed"
+              type="button"
+              class="p-2 text-gray-600 font-semibold rounded-lg border border-transparent bg-gray-100 hover:bg-gray-200"
+            >
+              View review
+            </button>
+          </div>
+        </div>
+        <div
+          *ngIf="item.returnedQuantity || item.replacedQuantity"
+          class="flex bg-gray-100 rounded-b-lg p-4 gap-x-4"
+        >
+          <div>
+            {{ item.returnedQuantity }} of {{ item.quantity }} are returning
+          </div>
+          <div class="mx-auto text-center">{{ item.returnReason }}</div>
+          <div class="ms-auto">Refund processed</div>
+        </div>
+      </div>
+
+      <!-- custom modal -->
+
+      <div
+        *ngIf="showModals[item.id ?? 0]"
+        id="modal-{{ item.id }}"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-y-auto px-4 py-6 z-[100]"
+      >
+        <div
+          class="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-4xl max-h-full"
+        >
+          <!-- Modal Header -->
+          <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-medium text-gray-900">Modal Title</h3>
+              <button
+                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5"
+                (click)="closeModal(item.id)"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="flex-1 overflow-y-auto p-6">
+            <div class="p-4 overflow-y-auto">
+              <div>Highlights</div>
+              <div class="p-4 flex flex-wrap gap-4 border rounded">
+                <button
+                  (click)="removeHighlight(highlight)"
+                  *ngFor="let highlight of highlights"
+                  class="text-sm p-2 bg-gray-100 rounded"
+                >
+                  {{ highlight }}
+                </button>
+              </div>
+              <div
+                class="grid grid-cols-4 gap-4 my-4 p-4 bg-gray-50 rounded-lg"
+              >
+                <button
+                  (click)="addHighlight(highlight)"
+                  *ngFor="let highlight of defaultHighlights"
+                  class="text-sm p-2 text-nowrap bg-gray-100 rounded"
+                >
+                  {{ highlight }}
+                </button>
+              </div>
+              <div>
+                <div>Content</div>
+                <div>
+                  <textarea
+                    [(ngModel)]="content"
+                    class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
+                    rows="3"
+                    placeholder="This is a textarea placeholder"
+                  ></textarea>
+                </div>
+              </div>
+              <div>
+                <div>Add Photos</div>
+
+                <div class="grid grid-cols-4">
+                  <img src="assets/redmi_13_pro_plus_black.webp" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="px-6 py-4 border-t border-gray-200">
+            <div class="flex justify-end space-x-2">
+              <button
+                class="px-4 py-2 bg-transparent rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-400"
+                (click)="closeModal(item.id)"
+              >
+                Close
+              </button>
+              <button
+                (click)="postReview(item.id)"
+                class="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-400"
+              >
+                Post review
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mx-4 text-sm">
+      <div class="bg-white rounded-lg p-4">
+        <div class="text-lg mb-2">Shipping address</div>
+        <div class="my-1 text-lg">{{ address?.addressType }}</div>
+        <div class="my-1">{{ address?.house }}</div>
+        <div class="my-1">{{ address?.landmark }}</div>
+        <div class="my-1">{{ address?.street }}</div>
+        <div class="my-1">{{ address?.city }} - {{ address?.zipcode }}</div>
+        <div class="my-1">{{ address?.state }}</div>
+        <div class="my-1">{{ address?.country }}</div>
+        <div class="my-1 text-wrap">Directions: {{ address?.directions }}</div>
+      </div>
+      <div class="bg-white rounded-lg p-4">
+        <div class="text-lg">Order summary</div>
+        <div class="mt-2 text-xs text-gray-600">
+          Order # {{ order?.orderId }}
+        </div>
+        <div class="mb-4 text-xs text-gray-600">
+          Ordered {{ order?.orderDate | date : "MMMM dd, yyyy hh:mm a" }}
+        </div>
+        <div class="flex flex-row items-center my-1">
+          <div>Items subtotal ({{ order?.items?.length }}):</div>
+          <div class="ms-auto">{{ subtotal() | currency : "INR" }}</div>
+        </div>
+        <div class="flex flex-row items-center my-1">
+          <div>Delivery charge:</div>
+          <div class="ms-auto">
+            {{ order?.deliveryCharge | currency : "INR" }}
+          </div>
+        </div>
+        <div class="flex flex-row items-center font-semibold my-2">
+          <div class="text-lg">Grand total:</div>
+          <div class="ms-auto text-lg">
+            {{ order?.orderAmount | currency : "INR" }}
+          </div>
+        </div>
+        <hr class="my-2" />
+        <div class="font-semibold">Payment Method</div>
+        <div class="my-1">{{ order?.paymentMode }}</div>
+      </div>
+      <div *ngIf="order?.status !== 'CANCELED'" class="bg-white rounded-lg p-4">
+        <div class="text-lg">Need help with this order?</div>
+        <div class="my-6 grid grid-cols-2 gap-x-4">
+          <button
+            (click)="openReturnModal()"
+            type="button"
+            class="p-2 text-gray-600 font-semibold rounded-lg border border-transparent bg-gray-100 hover:bg-gray-200"
+          >
+            Return
+          </button>
+
+          <button
+            (click)="openReplaceModal()"
+            type="button"
+            class="p-2 text-gray-600 font-semibold rounded-lg border border-transparent bg-gray-100 hover:bg-gray-200"
+          >
+            Replace
+          </button>
+        </div>
+      </div>
+      <div *ngIf="order?.status !== 'CANCELED'" class="bg-white rounded-lg p-4">
+        <div class="text-lg">How was your experience?</div>
+        <div class="flex flex-row items-center justify-around my-4">
+          <div class="text-center text-xs" *ngIf="feedbackType !== 'negative'">
+            <div>
+              <button
+                (click)="setFeedbackType('positive')"
+                [disabled]="feedback"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="size-10 text-gray-600"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-2.625 6c-.54 0-.828.419-.936.634a1.96 1.96 0 0 0-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634Zm4.314.634c.108-.215.395-.634.936-.634.54 0 .828.419.936.634.13.26.189.568.189.866 0 .298-.059.605-.189.866-.108.215-.395.634-.936.634-.54 0-.828-.419-.936-.634a1.96 1.96 0 0 1-.189-.866c0-.298.059-.605.189-.866Zm2.023 6.828a.75.75 0 1 0-1.06-1.06 3.75 3.75 0 0 1-5.304 0 .75.75 0 0 0-1.06 1.06 5.25 5.25 0 0 0 7.424 0Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div *ngIf="!feedback">It was great</div>
+            <p *ngIf="feedback">
+              <a
+                (click)="setFeedbackType('negative')"
+                class="text-gray-800 underline decoration-gray-800 hover:opacity-80 cursor-pointer"
+                >Change</a
+              >
+            </p>
+          </div>
+          <div class="text-center text-xs" *ngIf="feedbackType !== 'positive'">
+            <div>
+              <button
+                (click)="setFeedbackType('negative')"
+                [disabled]="feedback"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="size-10 text-gray-600"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-2.625 6c-.54 0-.828.419-.936.634a1.96 1.96 0 0 0-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634Zm4.314.634c.108-.215.395-.634.936-.634.54 0 .828.419.936.634.13.26.189.568.189.866 0 .298-.059.605-.189.866-.108.215-.395.634-.936.634-.54 0-.828-.419-.936-.634a1.96 1.96 0 0 1-.189-.866c0-.298.059-.605.189-.866Zm-4.34 7.964a.75.75 0 0 1-1.061-1.06 5.236 5.236 0 0 1 3.73-1.538 5.236 5.236 0 0 1 3.695 1.538.75.75 0 1 1-1.061 1.06 3.736 3.736 0 0 0-2.639-1.098 3.736 3.736 0 0 0-2.664 1.098Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div *ngIf="!feedback">Not so great</div>
+
+            <p *ngIf="feedback">
+              <a
+                (click)="setFeedbackType('positive')"
+                class="text-gray-800 underline decoration-gray-800 hover:opacity-80 cursor-pointer"
+                >Change</a
+              >
+            </p>
+          </div>
+          <div *ngIf="feedbackType === 'positive'">
+            Thanks for positive feedback!
+          </div>
+          <div *ngIf="feedbackType === 'negative'">
+            We will improve ourselves!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- custom feedback modal  -->
+<div
+  *ngIf="showFeedbackModal"
+  id="feedback-modal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-y-auto px-4 py-6 z-[100]"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-lg max-h-full"
+  >
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-medium text-gray-900">Modal Title</h3>
+        <button
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5"
+          (click)="closeFeedbackModal()"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <div class="p-4 overflow-y-auto">
+        <div *ngIf="feedbackType === 'positive'">
+          <p>Whoah hoo... Glad you liked it!</p>
+          <p class="mt-1 text-gray-800">What do you liked about our service?</p>
+        </div>
+        <div *ngIf="feedbackType === 'negative'">
+          <p>We are really sorry!</p>
+          <p class="mt-1 text-gray-800">Please help us make better...</p>
+        </div>
+        <textarea
+          [(ngModel)]="feedback"
+          class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
+          rows="3"
+          placeholder="Write you feedback here..."
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 border-t border-gray-200">
+      <div class="flex justify-end space-x-2">
+        <button
+          class="px-4 py-2 bg-transparent rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-400"
+          (click)="cancelFeedbackChange()"
+        >
+          Close
+        </button>
+        <button
+          (click)="updateFeedback()"
+          class="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-400"
+        >
+          Post review
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- custom return modal -->
+
+<div
+  *ngIf="showReturnModal"
+  id="feedback-modal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-y-auto px-4 py-6 z-[100]"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-2xl max-h-full"
+  >
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-medium text-gray-900">Modal Title</h3>
+        <button
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5"
+          (click)="closeReturnModal()"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <div class="p-4 overflow-y-auto">
+        <div *ngFor="let item of returnableItems">
+          <div class="flex flex-row items-center gap-x-4">
+            <div class="">
+              <input
+                (change)="
+                  addReturnItem(
+                    item.id,
+                    +input.value,
+                    returnReason[item.id ?? 0]
+                  )
+                "
+                type="checkbox"
+                class="shrink-0 mt-0.5 ms-auto rounded text-gray-700 border-2 border-gray-700 focus:ring-transparent disabled:opacity-50 disabled:ring-0 disabled:pointer-events-none cursor-pointer disabled:border-none"
+                [disabled]="
+                  !(
+                    (returnReason[item.id ?? 0]
+                      ? returnReason[item.id ?? 0]
+                      : ''
+                    ).length > 2
+                  )
+                "
+              />
+            </div>
+            <div class="w-20 p-4">
+              <img [src]="getProductImage(item)" alt="" />
+            </div>
+            <div>{{ item.itemName }}</div>
+            <div class="flex items-center">
+              <!-- Input Number -->
+              <div class="py-2 px-3 inline-block rounded-lg">
+                <div class="flex items-center gap-x-1.5">
+                  <button
+                    type="button"
+                    class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                    data-hs-input-number-decrement
+                    (click)="input.value = +input.value - 1 + ''"
+                    [ngClass]="{
+                      'pointer-events-none opacity-50': +input.value <= 1
+                    }"
+                  >
+                    <svg
+                      class="flex-shrink-0 size-3.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12h14" />
+                    </svg>
+                  </button>
+                  <div class="">
+                    <input
+                      #input
+                      class="p-0 w-4 bg-transparent border-0 text-gray-800 text-center focus:ring-0"
+                      type="text"
+                      value="1"
+                      data-hs-input-number-input
+                      disabled
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                    data-hs-input-number-increment
+                    (click)="input.value = +input.value + 1 + ''"
+                    [ngClass]="{
+                      'pointer-events-none opacity-50':
+                        +input.value >=
+                        item.quantity -
+                          (item.returnedQuantity ?? 0) +
+                          (item.replacedQuantity ?? 0)
+                    }"
+                  >
+                    <svg
+                      class="flex-shrink-0 size-3.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="M12 5v14" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <span> / </span>
+              <span class="ms-2">
+                {{
+                  item.quantity -
+                    (item.returnedQuantity ?? 0) +
+                    (item.replacedQuantity ?? 0)
+                }}</span
+              >
+            </div>
+            <div>
+              <input
+                type="text"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
+                placeholder="Enter reason"
+                (input)="onReturnReasonInput(item.id ?? 0, $event)"
+              />
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!returnableItems.length" class="text-xl text-center">
+          Nothing to return!
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 border-t border-gray-200">
+      <div class="flex justify-end space-x-2">
+        <button
+          class="px-4 py-2 bg-transparent rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-400"
+        >
+          Close
+        </button>
+        <button
+          (click)="updateReturnItems()"
+          class="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-400"
+        >
+          Return
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- custom replace modal -->
+
+<div
+  *ngIf="showReplaceModal"
+  id="feedback-modal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-y-auto px-4 py-6 z-[100]"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-2xl max-h-full"
+  >
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-medium text-gray-900">Modal Title</h3>
+        <button
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5"
+          (click)="closeReplaceModal()"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <div class="p-4 overflow-y-auto">
+        <div *ngFor="let item of replacableItems">
+          <div class="flex flex-row items-center gap-x-4">
+            <div class="">
+              <input
+                (change)="
+                  addReplaceItem(
+                    item.id,
+                    +input.value,
+                    replaceReason[item.id ?? 0]
+                  )
+                "
+                type="checkbox"
+                class="shrink-0 mt-0.5 ms-auto rounded text-gray-700 border-2 border-gray-700 focus:ring-transparent disabled:opacity-50 disabled:ring-0 disabled:pointer-events-none cursor-pointer disabled:border-none"
+                [disabled]="
+                  !(
+                    (replaceReason[item.id ?? 0]
+                      ? replaceReason[item.id ?? 0]
+                      : ''
+                    ).length > 2
+                  )
+                "
+              />
+            </div>
+            <div class="w-20 p-4">
+              <img [src]="getProductImage(item)" alt="" />
+            </div>
+            <div>{{ item.itemName }}</div>
+            <div class="flex items-center">
+              <!-- Input Number -->
+              <div
+                class="py-2 px-3 inline-block rounded-lg"
+                data-hs-input-number
+              >
+                <div class="flex items-center gap-x-1.5">
+                  <button
+                    type="button"
+                    class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                    data-hs-input-number-decrement
+                    (click)="input.value = +input.value - 1 + ''"
+                    [ngClass]="{
+                      'pointer-events-none opacity-50': +input.value <= 1
+                    }"
+                  >
+                    <svg
+                      class="flex-shrink-0 size-3.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12h14" />
+                    </svg>
+                  </button>
+                  <div class="">
+                    <input
+                      #input
+                      class="p-0 w-4 bg-transparent border-0 text-gray-800 text-center focus:ring-0"
+                      type="text"
+                      value="1"
+                      data-hs-input-number-input
+                      disabled
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                    data-hs-input-number-increment
+                    (click)="input.value = +input.value + 1 + ''"
+                    [ngClass]="{
+                      'pointer-events-none opacity-50':
+                        +input.value >=
+                        item.quantity -
+                          (item.returnedQuantity ?? 0) +
+                          (item.replacedQuantity ?? 0)
+                    }"
+                  >
+                    <svg
+                      class="flex-shrink-0 size-3.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="M12 5v14" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <span> / </span>
+              <span class="ms-2">
+                {{
+                  item.quantity -
+                    (item.returnedQuantity ?? 0) +
+                    (item.replacedQuantity ?? 0)
+                }}</span
+              >
+            </div>
+            <div>
+              <input
+                id="replaceReasonInput-{{ item.id }}"
+                type="text"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500"
+                placeholder="Enter reason"
+                (input)="onReplaceReasonInput(item.id ?? 0, $event)"
+              />
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!replacableItems.length" class="text-xl text-center">
+          Nothing to replace!
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 border-t border-gray-200">
+      <div class="flex justify-end space-x-2">
+        <button
+          class="px-4 py-2 bg-transparent rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-400"
+        >
+          Close
+        </button>
+        <button
+          (click)="updateReplaceItems()"
+          class="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-400"
+        >
+          Return
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

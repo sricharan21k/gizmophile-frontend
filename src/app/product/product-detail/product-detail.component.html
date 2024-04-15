@@ -1,0 +1,388 @@
+<div class="bg-gray-50 py-10">
+  <!-- Toast -->
+  <div
+    *ngIf="showSuccessToast"
+    class="fixed top-15 start-1/2 -translate-x-1/2 max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg"
+    role="alert"
+  >
+    <div class="flex p-4">
+      <div class="flex-shrink-0">
+        <svg
+          class="flex-shrink-0 size-4 text-gray-700 mt-0.5"
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+          />
+        </svg>
+      </div>
+      <div class="ms-3">
+        <p class="text-sm text-gray-700">Added to wishlist.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div
+    *ngIf="showFailureToast"
+    class="fixed top-15 start-1/2 -translate-x-1/2 max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg"
+    role="alert"
+  >
+    <div class="flex p-4">
+      <div class="flex-shrink-0">
+        <svg
+          class="flex-shrink-0 size-4 text-gray-700 mt-0.5"
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+          />
+        </svg>
+      </div>
+      <div class="ms-3">
+        <p class="text-sm text-gray-700">Removed from wishlist.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col lg:flex-row w-4/5 mx-auto gap-x-8">
+    <div class="w-full lg:w-2/5">
+      <div class="p-10 rounded-lg bg-white sticky top-24">
+        <img [src]="getImage()" alt="" class="rounded-lg" />
+      </div>
+    </div>
+    <div class="w-full lg:w-3/5 bg-white rounded-lg">
+      <div class="mx-12 my-8">
+        <div class="flex flex-row">
+          <div>
+            <h2 class="text-2xl text-gray-700 font-bold mb-1">
+              {{ product?.brand }} {{ product?.model }}
+            </h2>
+            <h4 class="text-gray-500">
+              {{ getColor() }},
+              {{ getVariant() }}
+            </h4>
+          </div>
+          <div class="ms-auto p-1">
+            <button
+              type="button"
+              class="size-5 inline-flex justify-center items-center text-3xl rounded-full text-gray-200 hover:text-gray-700 disabled:opacity-50 disabled:pointer-events-none"
+              (click)="toggleWishlistItem()"
+              [ngClass]="{ 'text-gray-700': checkLikedItem() }"
+            >
+              <svg
+                class="flex-shrink-0 size-6"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <h3 class="text-xl my-4">{{ getPrice() | currency : "INR" }}</h3>
+        <hr />
+        <ul
+          role="list"
+          class="marker:text-gray-300 list-disc ps-5 space-y-2 my-4"
+        >
+          <li *ngFor="let spec of product?.specs">{{ spec }}</li>
+        </ul>
+        <hr />
+        <div>
+          <h3 class="text-xl text-gray-700 font-semibold my-4">Color</h3>
+          <div class="flex flex-row gap-x-8">
+            <button
+              class="p-1 lg:p-4 inline-flex items-center border rounded-lg text-start text-sm text-gray-700 text-wrap gap-x-4 hover:bg-gray-50 focus:border-gray-700"
+              *ngFor="let color of getColors()"
+              (click)="selectColor(color)"
+              [ngClass]="{
+                'border-gray-700': isCurrentColor(color)
+              }"
+            >
+              <span
+                class="p-3 rounded-lg shadow"
+                [ngStyle]="{ 'background-color': color.split(' ')[1] }"
+              ></span
+              >{{ color }}
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <h3 class="text-xl text-gray-700 font-semibold my-4">Variant</h3>
+          <div class="flex flex-row gap-x-8">
+            <button
+              class="p-4 inline-flex items-center border rounded-lg text-gray-700 hover:bg-gray-50 focus:border-gray-700"
+              *ngFor="let variant of getVariants()"
+              (click)="selectVariant(variant)"
+              [ngClass]="{
+                'border-gray-700': isCurrentVariant(variant)
+              }"
+            >
+              {{ variant }}
+            </button>
+          </div>
+        </div>
+        <hr />
+        <div *ngIf="(product?.stock ?? 0) >= 1">
+          <div class="my-4">
+            <label for="input-label" class="block text-sm text-gray-500 mb-2"
+              >Check availability</label
+            >
+
+            <div class="flex rounded-lg shadow-sm">
+              <input
+                type="text"
+                placeholder="Enter pincode"
+                id="input-label"
+                class="py-3 px-4 block w-full border-gray-200 rounded-s-lg text-sm focus:z-10 focus:ring-transparent focus:border-gray-700"
+              />
+              <button
+                type="button"
+                class="px-4 rounded-e-md bg-gray-600 text-white hover:bg-gray-700"
+              >
+                Check
+              </button>
+            </div>
+          </div>
+          <hr />
+          <h3 class="text-xl text-gray-700 font-semibold my-4">Quantity</h3>
+          <div
+            class="py-0 px-3 inline-block border rounded-lg"
+            data-hs-input-number
+          >
+            <div class="flex items-center gap-x-1.5">
+              <button
+                type="button"
+                class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50"
+                data-hs-input-number-decrement
+                (click)="quantity = quantity - 1"
+                [ngClass]="{ 'pointer-events-none opacity-50': quantity <= 1 }"
+              >
+                <svg
+                  class="flex-shrink-0 size-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                </svg>
+              </button>
+              <input
+                [value]="quantity"
+                class="p-0 m-4 w-6 bg-transparent border-0 text-gray-800 text-center focus:ring-0"
+                type="text"
+                min="1"
+                id="quantity-value"
+                data-hs-input-number-input
+                readonly
+              />
+              <button
+                type="button"
+                class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                data-hs-input-number-increment
+                (click)="quantity = quantity + 1"
+              >
+                <svg
+                  class="flex-shrink-0 size-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="my-4 p-4 bg-gray-50 rounded-lg">
+            <div class="flex flex-row items-center mb-4">
+              <h3>
+                {{ product?.brand }} {{ product?.model }} {{ getColor() }}
+                {{ getVariant() }}
+              </h3>
+              <h4 class="ms-auto">{{ getPrice() }} * {{ quantity }}</h4>
+            </div>
+            <div class="flex flex-row items-center">
+              <h4 class="justify-start">Total:</h4>
+              <h2 class="text-xl ms-auto">
+                {{ (getPrice() ?? 0) * quantity | currency : "INR" }}
+              </h2>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-800 text-white hover:bg-gray-700"
+            (click)="addToCart()"
+          >
+            Buy Now
+          </button>
+        </div>
+        <div *ngIf="(product?.stock ?? 0) <= 0" class="my-8">
+          <h2 class="text-2xl text-gray-700 text-center">Out of stock</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-4/5 mx-auto mt-8 mb-4 px-16 py-8 bg-white rounded-lg">
+    <h2 class="text-2xl mb-4">Rating and Reviews</h2>
+    <div class="flex items-center">
+      <div class="text-3xl me-2">{{ product?.rating ?? 0 }}</div>
+      <!-- Rating -->
+      <div class="flex flex-row-reverse justify-end items-center">
+        <input
+          id="hs-ratings-1"
+          type="radio"
+          class="peer -ms-5 size-5 bg-transparent border-0 text-transparent appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+          [checked]="product?.rating == 5"
+          disabled
+        />
+        <label
+          for="hs-ratings-1"
+          class="peer-checked:text-gray-700 text-gray-300 pointer-events-none"
+        >
+          <svg
+            class="flex-shrink-0 size-5"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+            />
+          </svg>
+        </label>
+        <input
+          id="hs-ratings-2"
+          type="radio"
+          class="peer -ms-5 size-5 bg-transparent border-0 text-transparent appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+          [checked]="(product?.rating ?? 0) >= 4"
+          disabled
+        />
+        <label
+          for="hs-ratings-2"
+          class="peer-checked:text-gray-700 text-gray-300 pointer-events-none"
+        >
+          <svg
+            class="flex-shrink-0 size-5"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+            />
+          </svg>
+        </label>
+        <input
+          id="hs-ratings-3"
+          type="radio"
+          class="peer -ms-5 size-5 bg-transparent border-0 text-transparent appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+          [checked]="(product?.rating ?? 0) >= 3"
+          disabled
+        />
+        <label
+          for="hs-ratings-3"
+          class="peer-checked:text-gray-700 text-gray-300 pointer-events-none"
+        >
+          <svg
+            class="flex-shrink-0 size-5"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+            />
+          </svg>
+        </label>
+        <input
+          id="hs-ratings-4"
+          type="radio"
+          class="peer -ms-5 size-5 bg-transparent border-0 text-transparent appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+          [checked]="(product?.rating ?? 0) >= 2"
+          disabled
+        />
+        <label
+          for="hs-ratings-4"
+          class="peer-checked:text-gray-700 text-gray-300 pointer-events-none"
+        >
+          <svg
+            class="flex-shrink-0 size-5"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+            />
+          </svg>
+        </label>
+        <input
+          id="hs-ratings-5"
+          type="radio"
+          class="peer -ms-5 size-5 bg-transparent border-0 text-transparent appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
+          [checked]="(product?.rating ?? 0) >= 1"
+          disabled
+        />
+        <label
+          for="hs-ratings-5"
+          class="peer-checked:text-gray-700 text-gray-300 pointer-events-none"
+        >
+          <svg
+            class="flex-shrink-0 size-5"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+            />
+          </svg>
+        </label>
+      </div>
+      <!-- End Rating -->
+    </div>
+  </div>
+
+  <app-product-review [product]="product"></app-product-review>
+</div>
