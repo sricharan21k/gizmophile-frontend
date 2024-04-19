@@ -199,12 +199,14 @@
         >
           <div *ngIf="!isAuthenticated()">
             <a
+              (click)="toggleProfileDropdown()"
               class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
               routerLink="/login"
             >
               Sign in
             </a>
             <a
+              (click)="toggleProfileDropdown()"
               class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
               routerLink="/register"
             >
@@ -214,30 +216,35 @@
           <!-- Dropdown content -->
           <div *ngIf="isAuthenticated()">
             <a
+              (click)="toggleProfileDropdown()"
               class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
               routerLink="/profile"
             >
               My account
             </a>
             <a
+              (click)="toggleProfileDropdown()"
               class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
               routerLink="/profile/addressList"
             >
               Addresses
             </a>
             <a
+              (click)="toggleProfileDropdown()"
               class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
               routerLink="/profile/orders"
             >
               Orders
             </a>
             <a
+              (click)="toggleProfileDropdown()"
               class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
               routerLink="/profile/reviews"
             >
               Reviews
             </a>
             <a
+              (click)="toggleProfileDropdown()"
               class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
               routerLink="/profile/wishlist"
             >
@@ -258,7 +265,7 @@
 
 <!-- Sidebar Overlay -->
 <div
-  class="fixed top-0 left-0 w-full h-full bg-black opacity-60 z-50"
+  class="fixed top-0 left-0 w-full h-full bg-black opacity-60 z-50 md:hidden"
   [ngClass]="{ hidden: !showSidebar }"
   (click)="toggleSidebar()"
 ></div>
@@ -269,7 +276,7 @@
     'translate-x-0': showSidebar,
     '-translate-x-full': !showSidebar
   }"
-  class="bg-white shadow-md w-64 space-y-6 px-2 absolute inset-y-0 left-0 transform -translate-x-full transition duration-200 ease-in-out z-50"
+  class="bg-white shadow-md w-64 space-y-6 px-2 fixed inset-y-0 left-0 transform -translate-x-full transition duration-200 ease-in-out z-50 md:hidden"
 >
   <button (click)="toggleSidebar()" class="p-4">
     <svg
@@ -288,39 +295,45 @@
   </button>
   <nav>
     <a
-      outerLink="/home"
+      (click)="toggleSidebar()"
+      routerLink="/home"
       class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100"
       routerLinkActive="bg-gray-100"
       >Home</a
     >
     <a
+      (click)="toggleSidebar()"
       class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100"
       routerLink="/product-list/phone"
       routerLinkActive="bg-gray-100"
       >Phone</a
     >
     <a
+      (click)="toggleSidebar()"
       class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100"
       routerLink="/product-list/tablet"
-      routerLinkActive="text-white bg-gray-100"
+      routerLinkActive="bg-gray-100"
       >Tablet</a
     >
     <a
+      (click)="toggleSidebar()"
       class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100"
       routerLink="/product-list/laptop"
-      routerLinkActive="text-white bg-gray-100"
+      routerLinkActive="bg-gray-100"
       >Laptop</a
     >
     <a
+      (click)="toggleSidebar()"
       class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100"
       routerLink="/product-list/watch"
-      routerLinkActive="text-white bg-gray-100"
+      routerLinkActive="bg-gray-100"
       >Watch</a
     >
     <a
+      (click)="toggleSidebar()"
       class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100"
       routerLink="/product-list/audio"
-      routerLinkActive="text-white bg-gray-100"
+      routerLinkActive="bg-gray-100"
       >Audio</a
     >
   </nav>
@@ -339,7 +352,7 @@
     'translate-y-0': showSearchOverlay,
     '-translate-y-full': !showSearchOverlay
   }"
-  class="bg-white shadow-md w-full h-full space-y-6 px-2 absolute top-0 transform -translate-y-full transition duration-300 ease-in-out z-50"
+  class="fixed bg-white shadow-md w-full h-full space-y-6 px-2 top-0 transform -translate-y-full transition duration-300 ease-in-out z-50"
 >
   <div class="flex flex-row items-center">
     <div class="text-xl font-semibold text-gray-700">Gizmophile</div>
@@ -404,7 +417,7 @@
           *ngFor="let product of items.slice(0, 5)"
           [routerLink]="['/product', product]"
           [queryParams]="{
-            color: (product.colors | keyvalue)[0].key,
+            color: product,
             variant: (product.variants | keyvalue)[0].key
           }"
         >
@@ -442,32 +455,37 @@
             </svg>
           </span>
         </div>
-        <div class="p-4">
-          <a
-            (click)="toggleSearchOverlay()"
-            class="hover:bg-gray-400"
-            *ngFor="let product of newLaunches"
-            [routerLink]="['/product', product.productId]"
-            [queryParams]="{
-              color: product.colorId,
-              variant: product.variantId
-            }"
-          >
-            <div class="flex items-center hover:bg-gray-50 px-4">
-              <img
-                class="size-9"
-                [src]="getProductImage(product.colorId)"
-                alt=""
-              />
-              <h3 class="text-gray-500 p-4 font-semibold hover:text-gray-700">
-                {{ product.productName }}
-              </h3>
-            </div>
-          </a>
+        <div class="relative p-4">
+          <div *ngIf="newLaunches.length">
+            <a
+              (click)="toggleSearchOverlay()"
+              class="hover:bg-gray-400"
+              *ngFor="let product of newLaunches"
+              [routerLink]="['/product', product.productId]"
+              [queryParams]="{
+                color: product.colorId,
+                variant: product.variantId
+              }"
+            >
+              <div class="flex items-center hover:bg-gray-50 px-4">
+                <img class="size-9" [src]="product.imageUrl" alt="" />
+                <h3 class="text-gray-500 p-4 font-semibold hover:text-gray-700">
+                  {{ product.productName }}
+                </h3>
+              </div>
+            </a>
+          </div>
+          <div *ngIf="!newLaunches.length" class="absolute top-1/2 start-1/2">
+            <div
+              class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-gray-600 rounded-full"
+              role="status"
+              aria-label="loading"
+            ></div>
+          </div>
         </div>
       </div>
     </div>
-    <div *ngIf="hideTopics">
+    <div *ngIf="hideTopics" class="relative">
       <h2
         class="flex items-center justify-center gap-x-2 text-gray-400 text-center my-2"
       >
@@ -489,7 +507,10 @@
           </svg>
         </span>
       </h2>
-      <div class="grid grid-cols-2 items-center justify-around">
+      <div
+        *ngIf="searchResults.length && showSearchOverlay"
+        class="grid grid-cols-2 items-center justify-around"
+      >
         <a
           (click)="toggleSearchOverlay()"
           class="col-span-1 mx-auto hover:bg-gray-400"
@@ -501,16 +522,23 @@
           }"
         >
           <div class="flex items-center hover:bg-gray-50">
-            <img
-              class="size-9"
-              [src]="getProductImage(product.colorId)"
-              alt=""
-            />
-            <h3 class="text-gray-500 p-4 font-semibold hover:text-gray-700">
+            <div class="w-1/4 h-20 p-4">
+              <img class="max-h-20" [src]="product.imageUrl" alt="" />
+            </div>
+            <h3
+              class="w-3/4 text-gray-500 p-4 font-semibold hover:text-gray-700"
+            >
               {{ product.productName }}
             </h3>
           </div>
         </a>
+      </div>
+      <div *ngIf="!searchResults.length" class="absolute start-1/2">
+        <div
+          class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-gray-600 rounded-full"
+          role="status"
+          aria-label="loading"
+        ></div>
       </div>
     </div>
   </div>

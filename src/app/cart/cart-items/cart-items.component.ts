@@ -20,34 +20,18 @@ export class CartItemsComponent implements OnInit {
   variants: ProductVariant[] = [];
   colors: ProductColor[] = [];
 
+  showSpinner: boolean = false;
+
   constructor(
     private cartService: CartService,
     private productService: ProductService
   ) {}
 
   ngOnInit(): void {
-    // this.cartService.getCart().forEach((item) => {
-    //   this.productService.getProduct(item.item).subscribe((product) => {
-    //     console.log('product', product);
-    //     product.variants.forEach((variantId) =>
-    //       this.productService
-    //         .getProductVariant(variantId)
-    //         .subscribe((variant) => this.variants.push(variant))
-    //     );
-
-    //     product.colors.forEach((colorId) =>
-    //       this.productService
-    //         .getProductColor(colorId)
-    //         .subscribe((color) => this.colors.push(color))
-    //     );
-    //     const cartItem: CartItemData = {
-    //       ...item,
-    //       product: product,
-    //     };
-    //     this.cartItems.push(cartItem);
-    //   });
-    // });
     const cartItems = this.cartService.getCart();
+    if (cartItems.length) {
+      this.showSpinner = true;
+    }
     cartItems.forEach((item) => {
       this.productService
         .getProduct(item.item)
@@ -86,12 +70,9 @@ export class CartItemsComponent implements OnInit {
             );
           })
         )
-        .subscribe({
-          next: (cartItem) => {
-            this.cartItems.push(cartItem);
-          },
-          error: (err) => console.error(err),
-          // No need for a complete handler in this context
+        .subscribe((cartItems) => {
+          this.cartItems.push(cartItems);
+          this.showSpinner = false;
         });
     });
   }
@@ -121,6 +102,11 @@ export class CartItemsComponent implements OnInit {
       .filter((color) => color.productId === cartItemData.item)
       .find((color) => color.color === cartItemData.color)?.id;
     return this.productService.getProductImage(colorId as number);
+  }
+  getProductImageUrl(cartItemData: CartItemData) {
+    return this.colors
+      .filter((color) => color.productId === cartItemData.item)
+      .find((color) => color.color === cartItemData.color)?.image;
   }
 
   getPrice(productId: number, productVariant: string) {

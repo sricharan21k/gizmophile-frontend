@@ -3,4 +3,5 @@ export interface SearchProduct {
   productName: string;
   colorId: number;
   variantId: number;
+  imageUrl: string;
 }

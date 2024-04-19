@@ -71,7 +71,18 @@ export class ProductReviewComponent {
       console.log('replies', this.replies);
     });
   }
-  likeReview(reviewId: number) {}
+  likeReview(reviewId: number) {
+    this.reviewService.likeReview(reviewId).subscribe((data) => {
+      if (this.reviews.find((review) => review.id === reviewId)) {
+        if (this.reviews.find((review) => review.id === reviewId)?.likes) {
+          const index = this.reviews.findIndex(
+            (review) => review.id === reviewId
+          );
+          this.reviews[index].likes = data;
+        }
+      }
+    });
+  }
   hideReplies(value: any) {
     this.showReplies = !value;
   }

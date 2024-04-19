@@ -142,7 +142,7 @@
         <div *ngFor="let item of items" class="">
           <div class="flex gap-x-4">
             <div class="w-1/5 p-4">
-              <img [src]="getProductImage(item)" alt="" class="" />
+              <img [src]="getProductImageUrl(item)" alt="" class="" />
             </div>
             <div class="my-auto">
               <h3>{{ item.product.brand }} {{ item.product.model }}</h3>

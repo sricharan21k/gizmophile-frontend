@@ -18,7 +18,8 @@ export class OrderComponent {
   toPascalCase = Utils.toPascalCase;
   showSpinner: boolean = false;
   username: string = '';
-  activeStep: number = 4;
+  activeStep: number = 1;
+  orderStatus: string = 'PLACED';
   orders: Order[] = [];
   showCancelModals: { [key: number]: boolean } = {};
   showTrackModals: { [key: number]: boolean } = {};
@@ -39,10 +40,14 @@ export class OrderComponent {
     });
   }
 
-  getProductImage(item: OrderItem) {
-    const colorId = item.image;
-    return this.productService.getProductImage(colorId as number);
-  }
+  // getProductImage(item: OrderItem) {
+  //   const colorId = item.image;
+  //   return this.productService.getProductImage(colorId as number);
+  // }
+  // getProductImageUrl(item: OrderItem) {
+  //   const colorId = item.image;
+  //   return this.productService.getProductImageUrl(colorId as number);
+  // }
 
   getUsername(): string {
     const user = localStorage.getItem('user');

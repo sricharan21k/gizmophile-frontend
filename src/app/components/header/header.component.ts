@@ -6,6 +6,7 @@ import {
   Observable,
   debounceTime,
   distinctUntilChanged,
+  filter,
   switchMap,
 } from 'rxjs';
 import { CartService } from '../../services/cart.service';
@@ -84,21 +85,22 @@ export class HeaderComponent {
   }
 
   filter(event: any) {
+    this.searchResults = [];
     const value = event.target.value.toLowerCase();
 
     this.hideTopics = value ? true : false;
-
     this.searchControl.valueChanges
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        switchMap((query) => this.productService.searchProducts(query ?? ''))
+
+        switchMap((query) =>
+          this.productService.searchProducts(
+            query ? (query.length > 1 ? query : 'undefined') : 'undefined'
+          )
+        )
       )
       .subscribe((results) => (this.searchResults = results));
-  }
-
-  getProductImage(colorId: number) {
-    return this.productService.getProductImage(colorId);
   }
 
   hideDropdownOnLeave() {

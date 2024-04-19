@@ -105,7 +105,7 @@ export class WishlistComponent {
   }
 
   getProductColor(colorId: number) {
-    return this.colors.find((color) => color.id === colorId)?.color;
+    return this.colors.find((color) => color.id === colorId)?.color as string;
   }
 
   getProductVariant(variantId: number) {
@@ -117,6 +117,15 @@ export class WishlistComponent {
       (color) => color.id === likedItem.color
     )?.id;
     return this.productService.getProductImage(colorId as number);
+  }
+  getProductImageUrl(likedItem: LikedItem) {
+    return this.colors.find((color) => color.id === likedItem.color)?.image;
+  }
+  getColorName(colorId: number) {
+    const color = this.getProductColor(colorId);
+    return color.split(' ').length > 2
+      ? color.split(' ').slice(0, 2).join(' ')
+      : color;
   }
 
   addToCart(likedItem: LikedItem) {

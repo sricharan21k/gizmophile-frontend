@@ -11,6 +11,7 @@ import { CartItem } from '../../model/cart-item';
 import { CartService } from '../../services/cart.service';
 import { ProductReviewComponent } from '../product-review/product-review.component';
 import { AppService } from '../../services/app.service';
+import { Utils } from '../../common/utilities';
 
 @Component({
   selector: 'app-product-detail',
@@ -22,6 +23,8 @@ import { AppService } from '../../services/app.service';
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
   @HostBinding('@routeAnimationTrigger') routeAnimation = true;
+
+  findCssColorName = Utils.findCSSColorName;
   product?: Product;
   variants: ProductVariant[] = [];
   colors: ProductColor[] = [];
@@ -128,9 +131,18 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   getColor() {
     return this.colors?.find((color) => color.id === this.selectedColor)?.color;
   }
+  getColorName(color: string) {
+    return color.split(' ').length > 2
+      ? color.split(' ').slice(0, 2).join(' ')
+      : color;
+  }
 
   getImage() {
     return this.productService.getProductImage(this.selectedColor as number);
+  }
+
+  getProductImageUrl() {
+    return this.colors.find((color) => color.id === this.selectedColor)?.image;
   }
 
   selectVariant(selectedVariant: string) {

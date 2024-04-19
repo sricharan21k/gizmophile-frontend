@@ -205,8 +205,13 @@ export class CheckoutComponent implements OnInit {
       .find((color) => color.color === cartItemData.color)?.id;
     return this.productService.getProductImage(colorId as number);
   }
-
+  getProductImageUrl(cartItemData: CartItemData) {
+    return this.colors
+      .filter((color) => color.productId === cartItemData.item)
+      .find((color) => color.color === cartItemData.color)?.image;
+  }
   placeOrder() {
+    this.showSpinner = true;
     this.order = {
       paymentMode: 'Cash On Delivery',
       shippingAddress: this.deliveryAddressId,
@@ -221,13 +226,10 @@ export class CheckoutComponent implements OnInit {
     };
 
     this.userService.placeOrder(this.username, this.order).subscribe((res) => {
+      this.showSpinner = false;
       this.cartService.clearCart();
-      // this.appService.saveUserDataInApp(this.username);
-      // this.saveUserDataInApp(this.username);
       this.router.navigate(['profile/order', res]);
     });
-
-    // location.reload();
   }
 
   populateAddressData() {
@@ -406,6 +408,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   verifyOtp() {
+    this.showSpinner = true;
     const otp = Object.keys(this.otpForm.controls)
       .map((control) => this.otpForm.controls[control].value)
       .join('');
@@ -415,6 +418,7 @@ export class CheckoutComponent implements OnInit {
       .subscribe((isValid) => {
         this.showEmail = false;
         this.showOTPInput = false;
+        this.showSpinner = false;
         if (isValid) {
           this.otpVerified = true;
         } else {

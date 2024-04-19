@@ -8,7 +8,7 @@ export interface OrderItem {
   quantity: number;
   price?: number;
   itemValue?: number;
-  image?: number;
+  imageUrl?: string;
   rating?: number;
   isReviewed?: boolean;
   reviewId?: number;

@@ -54,9 +54,23 @@
   </div>
 
   <div class="flex flex-col lg:flex-row w-4/5 mx-auto gap-x-8">
-    <div class="w-full lg:w-2/5">
-      <div class="p-10 rounded-lg bg-white sticky top-24">
-        <img [src]="getImage()" alt="" class="rounded-lg" />
+    <div class="relative w-full lg:w-2/5">
+      <div
+        *ngIf="getProductImageUrl()"
+        class="p-10 rounded-lg bg-white sticky top-24"
+      >
+        <img
+          [src]="getProductImageUrl()"
+          alt=""
+          class="mx-auto max-h-96 rounded-lg"
+        />
+      </div>
+      <div *ngIf="!getProductImageUrl()" class="absolute top-1/2 start-1/2">
+        <div
+          class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-gray-600 rounded-full"
+          role="status"
+          aria-label="loading"
+        ></div>
       </div>
     </div>
     <div class="w-full lg:w-3/5 bg-white rounded-lg">
@@ -105,9 +119,9 @@
         <hr />
         <div>
           <h3 class="text-xl text-gray-700 font-semibold my-4">Color</h3>
-          <div class="flex flex-row gap-x-8">
+          <div class="flex flex-row flex-wrap gap-8 items-center">
             <button
-              class="p-1 lg:p-4 inline-flex items-center border rounded-lg text-start text-sm text-gray-700 text-wrap gap-x-4 hover:bg-gray-50 focus:border-gray-700"
+              class="p-1 lg:p-4 lg:w-30 inline-flex items-center border rounded-lg text-start text-sm text-gray-700 text-wrap gap-x-4 hover:bg-gray-50 focus:border-gray-700"
               *ngFor="let color of getColors()"
               (click)="selectColor(color)"
               [ngClass]="{
@@ -115,10 +129,12 @@
               }"
             >
               <span
-                class="p-3 rounded-lg shadow"
-                [ngStyle]="{ 'background-color': color.split(' ')[1] }"
+                class="p-3 rounded-lg shadow text-wrap"
+                [ngStyle]="{
+                  'background-color': findCssColorName(color)
+                }"
               ></span
-              >{{ color }}
+              >{{ getColorName(color) }}
             </button>
           </div>
         </div>

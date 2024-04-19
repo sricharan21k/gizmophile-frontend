@@ -219,7 +219,7 @@
       </li>
       <li class="inline-flex items-center">
         <button class="flex items-center">
-          <label class="cursor-pointer">
+          <label class="cursor-pointer flex gap-1 items-center">
             <input
               type="checkbox"
               class="shrink-0 my-auto border-gray-200 rounded text-gray-700 focus:ring-transparent disabled:opacity-50 disabled:pointer-events-none"
@@ -245,12 +245,15 @@
           <div
             @fadeInOut
             *ngIf="showBrandDropdown"
-            class="absolute w-40 left-0 mt-4 bg-white shadow-md rounded-lg z-50"
+            class="absolute w-40 left-0 mt-4 bg-white shadow-md rounded-lg z-40"
           >
             <div
               class="relative flex items-start py-2 px-3 rounded-lg hover:bg-gray-100"
             >
-              <div class="flex items-center h-5 mt-1">
+              <label
+                for="hs-dropdown-item-checkbox-delete"
+                class="flex items-center h-5 mt-1"
+              >
                 <input
                   id="hs-dropdown-item-checkbox-delete"
                   name="hs-dropdown-item-checkbox-delete"
@@ -259,21 +262,23 @@
                   [checked]="allBrandsSelected()"
                   (change)="SelectAllBrands()"
                 />
-              </div>
-              <label
-                for="hs-dropdown-item-checkbox-delete"
-                class="ms-3.5 pointer-events-none select-text selection:hidden"
-              >
-                <span class="mt-1 block text-sm font-semibold text-gray-800"
-                  >All</span
+                <div
+                  class="ms-3.5 pointer-events-none select-text selection:hidden"
                 >
+                  <span class="mt-1 block text-sm font-semibold text-gray-800"
+                    >All</span
+                  >
+                </div>
               </label>
             </div>
             <div
               *ngFor="let brand of brands; let i = index"
               class="relative flex items-start py-2 px-3 rounded-lg hover:bg-gray-100 select-none"
             >
-              <div class="flex items-center h-5 mt-1">
+              <label
+                for="hs-dropdown-item-checkbox-{{ i }}"
+                class="flex items-center h-5 mt-1"
+              >
                 <input
                   id="hs-dropdown-item-checkbox-{{ i }}"
                   type="checkbox"
@@ -281,20 +286,32 @@
                   [checked]="brandSelected(brand)"
                   (change)="selectBrand(brand)"
                 />
-              </div>
-              <label
-                for="hs-dropdown-item-checkbox-{{ i }}"
-                class="ms-3.5 pointer-events-none select-none"
-              >
-                <span class="mt-1 block text-sm font-semibold text-gray-800">{{
-                  brand
-                }}</span>
+                <div class="ms-3.5 pointer-events-none select-none">
+                  <span
+                    class="mt-1 block text-sm font-semibold text-gray-800"
+                    >{{ brand }}</span
+                  >
+                </div>
               </label>
             </div>
           </div>
         </div>
       </li>
     </ol>
+  </div>
+</div>
+
+<!-- Spinner -->
+<div
+  *ngIf="showSpinner"
+  class="flex justify-center items-center h-80 bg-gray-50"
+>
+  <div
+    class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-gray-600 rounded-full"
+    role="status"
+    aria-label="loading"
+  >
+    <span class="sr-only">Loading...</span>
   </div>
 </div>
 
@@ -325,10 +342,20 @@
           }"
         >
           <img
+            *ngIf="getProductImageUrl(product.id)"
             class="size-full absolute top-0 object-contain object-center scale-95 group-hover:scale-100 transition-transform duration-500 ease-in-out rounded-t-xl"
-            [src]="getProductImage(product.id)"
-            alt="Image Description"
+            [src]="getProductImageUrl(product.id)"
           />
+          <div
+            *ngIf="!getProductImageUrl(product.id)"
+            class="absolute top-1/2 start-1/2"
+          >
+            <div
+              class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-gray-600 rounded-full"
+              role="status"
+              aria-label="loading"
+            ></div>
+          </div>
         </a>
 
         <button
@@ -364,7 +391,7 @@
         <div class="my-4 flex flex-row items-center justify-center gap-x-4">
           <button
             class="border rounded-full hover:bg-gray-50 focus:border-gray-700"
-            *ngFor="let color of getColors(product.id)"
+            *ngFor="let color of getCssColors(product.id)"
             (click)="selectProductColor(product.id, color)"
             [ngClass]="{
               'border-gray-700': isCurrentColor(product.id, color)
@@ -372,7 +399,7 @@
           >
             <div class="">
               <span
-                class="block p-2.5 m-1 bg-gray-400 rounded-full shadow opacity-90"
+                class="block p-2.5 m-1 bg-gray-400 rounded-full shadow opacity-70"
                 [ngStyle]="{ 'background-color': color }"
               ></span>
             </div>
@@ -423,15 +450,14 @@
     class="p-4 flex items-center justify-center gap-x-1 rounded-lg bg-white/80 shadow-sm"
   >
     <!--dropdown-->
-    <div
-      class="me-4 hs-dropdown relative inline-flex justify-center sm:justify-start [--placement:top-left]"
-    >
+    <div class="me-4 relative inline-flex justify-center sm:justify-start">
       <button
+        (click)="togglePageSizeDropdown()"
         id="hs-pagination-dropdown"
         type="button"
         class="hs-dropdown-toggle p-2 inline-flex items-center gap-x-1 text-sm rounded-lg border border-gray-200 text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
       >
-        {{ pageSize }} page
+        {{ pageSize }} / page
         <svg
           class="flex-shrink-0 size-4"
           xmlns="http://www.w3.org/2000/svg"
@@ -448,76 +474,33 @@
         </svg>
       </button>
       <div
-        class="hs-dropdown-menu hs-dropdown-open:opacity-100 w-48 hidden z-50 transition-[margin,opacity] opacity-0 duration-300 mb-2 bg-white shadow-md rounded-lg p-2"
-        aria-labelledby="hs-pagination-dropdown"
+        @fadeInOut
+        *ngIf="showPageSizeDropdown"
+        class="absolute w-full bottom-12 right-0 mt-4 bg-white shadow-md rounded-lg"
       >
         <button
-          data-value="2"
+          data-value="4"
           type="button"
-          class="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+          class="w-full py-2 mx-auto text-center text-gray-800 hover:bg-gray-100"
           (click)="getPageOfSize($event)"
         >
-          2 page
-          <svg
-            *ngIf="pageSize === 2"
-            class="ms-auto flex-shrink-0 size-4 text-blue-600"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
+          4 / page
         </button>
         <button
-          data-value="6"
+          data-value="8"
           type="button"
-          class="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+          class="w-full py-2 text-center text-gray-800 hover:bg-gray-100"
           (click)="getPageOfSize($event)"
         >
-          6 page
-          <svg
-            class="ms-auto flex-shrink-0 size-4 text-blue-600"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
+          8 / page
         </button>
         <button
-          data-value="10"
+          data-value="12"
           type="button"
-          class="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+          class="w-full py-2 text-center text-gray-800 hover:bg-gray-100"
           (click)="getPageOfSize($event)"
         >
-          10 page
-          <svg
-            *ngIf="pageSize === 10"
-            class="ms-auto flex-shrink-0 size-4 text-blue-600"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
+          12 / page
         </button>
       </div>
     </div>

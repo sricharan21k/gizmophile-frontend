@@ -103,16 +103,21 @@ export class AccountComponent implements OnInit {
   }
 
   uploadImage() {
+    this.profileImage = '';
     console.log('data', this.imageData.get('profileImage'));
     this.userService
-      .uploadProfile(this.imageData, this.user?.username ?? '')
+      .uploadProfile(this.imageData, this.user?.username as string)
       .subscribe((data) => {
         console.log('res data', data);
+        this.profileImage = this.userService.getProfileImage(
+          this.user?.username as string
+        );
+        this.closeProfileModal();
       });
   }
 
   getImage() {
-    return this.userService.getProfileImage(this.user?.username ?? '');
+    return this.userService.getProfileImage(this.user?.username as string);
   }
 
   openEditModal() {
@@ -126,7 +131,7 @@ export class AccountComponent implements OnInit {
     this.showProfileModal = true;
   }
   closeProfileModal() {
-    this.profileImage = this.user?.profile ?? '';
+    // this.profileImage = this.user?.profile ?? '';
     this.showProfileModal = false;
   }
 }

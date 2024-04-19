@@ -7,6 +7,7 @@ import { AddRating } from '../model/add-rating';
 import { AddReview } from '../model/product/add-review';
 import { UpdateReview } from '../model/update-review';
 import { API_URL } from '../app.constants';
+import { AddReply } from '../model/add-reply';
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +52,10 @@ export class ReviewService {
     return this.http.post<number>(`${this.apiBaseUrl}/review`, reviewData);
   }
 
+  addReply(replyData: AddReply) {
+    return this.http.post(`${this.apiBaseUrl}/reply`, replyData);
+  }
+
   updateReview(request: UpdateReview, reviewId: number): Observable<Review> {
     return this.http.patch<Review>(
       `${this.apiBaseUrl}/review/${reviewId}`,
@@ -73,7 +78,7 @@ export class ReviewService {
   }
 
   likeReview(reviewId: number): Observable<number> {
-    return this.http.patch<number>(`${this.apiBaseUrl}/like/${reviewId}`, {});
+    return this.http.patch<number>(`${this.apiBaseUrl}/${reviewId}/like`, {});
   }
 
   deleteReview(reviewId: number) {

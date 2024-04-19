@@ -30,7 +30,11 @@ export class ProductService {
   getProduct(productId: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiBaseUrl}/product/${productId}`);
   }
-
+  getBaseProduct(productId: number): Observable<SearchProduct> {
+    return this.http.get<SearchProduct>(
+      `${this.apiBaseUrl}/base-product/${productId}`
+    );
+  }
   getProductVariant(variantId: number) {
     return this.http.get<ProductVariant>(
       `${this.apiBaseUrl}/product-variant/${variantId}`
@@ -44,6 +48,10 @@ export class ProductService {
 
   getProductImage(colorId: number) {
     return `${this.apiBaseUrl}/product-image/${colorId}`;
+  }
+
+  getProductImageUrl(colorId: number) {
+    return `${this.apiBaseUrl}/product-color/${colorId}/image-url`;
   }
 
   getProductsByType(

@@ -23,14 +23,27 @@
 
   <div class="my-4 mx-2">
     <div class="flex items-center">
-      <div class="p-5 bg-gray-200 rounded-full"></div>
+      <div
+        *ngIf="!review?.profile?.profilePicture"
+        class="p-5 bg-gray-200 rounded-full"
+      ></div>
+      <div *ngIf="review?.profile?.profilePicture" class="">
+        <img
+          [src]="getProfile(review?.profile?.username)"
+          alt=""
+          class="size-10 rounded-full"
+        />
+      </div>
       <div class="ms-6">
         <h2 class="text-xl">{{ review?.profile?.username }}</h2>
         <div class="text-xs text-gray-500">
           <div>
             Posted on: {{ review?.posted | date : "dd/MM/yy h:mm:ss a" }}
           </div>
-          <div>Last updated: {{ review?.lastUpdated }}</div>
+          <div>
+            Last updated:
+            {{ review?.lastUpdated | date : "dd/MM/yy h:mm:ss a" }}
+          </div>
         </div>
       </div>
       <div class="ms-auto flex flex-row-reverse justify-end items-center">
@@ -154,13 +167,14 @@
     <div class="ms-16 mt-4">
       <p>{{ review?.content }}</p>
     </div>
-    <div class="flex h-28 ms-12">
-      <!-- <img [src]="'/assets/' + product?.colors?.get('black')" alt="" /> -->
-      <!-- <img [src]="'/assets/' + colorImage[1]" alt="" /> -->
+    <div *ngFor="let image of review?.images; let i = index" class="">
+      <button class="relative" type="button">
+        <img class="h-40 peer" [src]="getImage(image, review?.id)" alt="" />
+      </button>
     </div>
     <div class="flex items-center mt-4">
       <div class="ms-16">
-        <h3>{{ review?.product }}</h3>
+        <h3>{{ review?.product?.productName }}</h3>
       </div>
       <div class="ms-auto flex items-center gap-x-8">
         <button class="flex items-center gap-x-1">
@@ -212,6 +226,7 @@
       <div class="p-4 bg-white rounded-lg">
         <label for="textarea-email-label" class="sr-only">Comment</label>
         <textarea
+          #reviewArea
           id="textarea-email-label"
           class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
           rows="3"
@@ -219,6 +234,7 @@
         ></textarea>
         <div class="ms-auto">
           <button
+            (click)="reply(reviewArea.value)"
             type="button"
             class="ms-auto py-2 px-4 inline-flex items-center gap-x-2 text-gray-600 font-semibold rounded-lg border border-transparent bg-gray-100 hover:bg-gray-200"
           >

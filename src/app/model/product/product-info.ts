@@ -4,5 +4,5 @@ export interface ProductInfo {
   productName: string;
   productColor: string;
   productVariant: string;
-  productImage: number;
+  productImage: string;
 }

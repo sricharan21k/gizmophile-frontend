@@ -1,9 +1,27 @@
-<div *ngIf="cartItems.length === 0" class="p-28 bg-gray-50">
-  <h3>Your shopping cart is empty</h3>
-  <button class="button hover:bg-gray-500">Shop Now ></button>
+<div
+  *ngIf="!cartItems.length && !showSpinner"
+  class="p-28 bg-gray-50 text-center"
+>
+  <h3 class="text-3xl">Your shopping cart is empty</h3>
+  <button
+    class="my-4 p-2 hover:bg-gray-100 text-xl rounded-xl hover:font-bold"
+    routerLink="/product-list/all"
+  >
+    Shop Now >
+  </button>
 </div>
 
-<div *ngIf="cartItems.length !== 0">
+<!-- Spinner -->
+<div
+  *ngIf="showSpinner"
+  class="flex justify-center items-center h-40 bg-gray-50"
+>
+  <div
+    class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-gray-600 rounded-full"
+  ></div>
+</div>
+
+<div *ngIf="cartItems.length">
   <div class="px-4 pt-4 pb-px bg-gray-50">
     <div
       class="flex flex-row items-center justify-center bg-white py-4 rounded-lg"
@@ -44,7 +62,11 @@
             variant: getVariantId(cartItem)
           }"
         >
-          <img [src]="getProductImage(cartItem)" alt="Product" class="w-1/2" />
+          <img
+            [src]="getProductImageUrl(cartItem)"
+            alt="Product"
+            class="w-1/2"
+          />
         </a>
       </div>
       <div class="w-1/4">
@@ -162,10 +184,7 @@
   </div>
 
   <div class="pb-4 px-4 bg-gray-50 sticky bottom-0">
-    <div
-      class="flex flex-row bg-white p-8 rounded-lg"
-      *ngIf="cartItems.length != 0"
-    >
+    <div class="flex flex-row bg-white p-8 rounded-lg">
       <div class="flex items-center justify-start w-1/2">
         <button
           class="px-4 text-lg border-r-2 hover:text-gray-500"

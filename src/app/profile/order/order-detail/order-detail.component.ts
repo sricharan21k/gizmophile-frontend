@@ -101,10 +101,18 @@ export class OrderDetailComponent {
       });
   }
 
-  getProductImage(item: OrderItem) {
-    const colorId = item.image;
-    return this.productService.getProductImage(colorId as number);
-  }
+  // getProductImage(item: OrderItem) {
+  //   const colorId = item.image;
+  //   return this.productService.getProductImage(colorId as number);
+  // }
+  // getProductImageUrl(item: OrderItem) {
+  //   const colorId = item.image;
+  //   console.log(
+  //     'img',
+  //     this.productService.getProductImageUrl(colorId as number)
+  //   );
+  //   return this.productService.getProductImageUrl(colorId as number);
+  // }
 
   openModal(itemId: any, type: any) {
     this.highlights = [];

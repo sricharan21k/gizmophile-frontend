@@ -6,6 +6,9 @@ import { Product } from '../model/product/product';
 import { AppService } from '../services/app.service';
 import { ProductService } from '../services/product.service';
 import { UserService } from '../services/user.service';
+import { ProductColor } from '../model/product/product-color';
+import { forkJoin } from 'rxjs';
+import { SearchProduct } from '../model/product/search-product';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +22,8 @@ export class HomeComponent {
   @HostBinding('@routeAnimationTrigger') routeAnimation = true;
   username: string = '';
   showDropdown: boolean = false;
-  browsedItems: Product[] = [];
+  browsedItems: SearchProduct[] = [];
+  productColors: ProductColor[] = [];
 
   slides: any[] = [
     'redmi_13_pro_plus_black.webp',
@@ -39,10 +43,10 @@ export class HomeComponent {
     this.username = this.userService.getUsername();
     const browsedList = this.appService.getBrowsedList();
     if (browsedList.length) {
-      browsedList.forEach((i) => {
-        this.productService.getProduct(+i).subscribe((p) => {
-          this.browsedItems.push(p);
-        });
+      browsedList.forEach((productId) => {
+        this.productService
+          .getBaseProduct(+productId)
+          .subscribe((item) => this.browsedItems.push(item));
       });
     }
     window.addEventListener('scroll', this.toggleJumperButtonVisibility);
@@ -69,6 +73,10 @@ export class HomeComponent {
   getProductImage(product: Product) {
     const colorId = product.colors[0];
     return this.productService.getProductImage(colorId);
+  }
+
+  getProductImageUrl(colorId: number) {
+    return this.productColors.find((color) => color.id === colorId)?.image;
   }
 
   toggleJumperButtonVisibility = () => {

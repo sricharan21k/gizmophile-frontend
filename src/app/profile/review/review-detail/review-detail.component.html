@@ -76,7 +76,7 @@
   <div class="w-2/3 mx-auto p-4">
     <div class="px-4 bg-white flex flex-row items-center rounded-lg">
       <div class="p-4" *ngIf="dataLoaded">
-        <img [src]="getProductImage()" alt="" class="w-32" />
+        <img [src]="review?.product?.productImage" alt="" class="h-32" />
       </div>
       <div class="mx-2 text-xl font-semibold text-gray-700">
         {{ review?.product?.productName }}

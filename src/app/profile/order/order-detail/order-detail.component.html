@@ -72,7 +72,7 @@
             <span
               class="size-7 flex justify-center items-center flex-shrink-0 bg-white-100 border border-gray-200 font-medium rounded-full"
               [ngClass]="{
-                'bg-gray-700 text-white': activeStep >= 1
+                'bg-gray-700 text-white': true
               }"
             >
               <svg
@@ -95,7 +95,10 @@
           <div
             class="w-full h-px flex-1 bg-gray-200 group-last:hidden"
             [ngClass]="{
-              'bg-gray-700 ': activeStep >= 2
+              'bg-gray-700 ':
+                order?.status === 'PACKED' ||
+                order?.status === 'SHIPPED' ||
+                order?.status === 'DELIVERED'
             }"
           ></div>
         </li>
@@ -109,7 +112,10 @@
             <span
               class="size-7 flex justify-center items-center flex-shrink-0 border bg-white-100 rounded-full"
               [ngClass]="{
-                'bg-gray-700 text-white': activeStep >= 2
+                'bg-gray-700 text-white':
+                  order?.status === 'PACKED' ||
+                  order?.status === 'SHIPPED' ||
+                  order?.status === 'DELIVERED'
               }"
             >
               <svg
@@ -132,7 +138,8 @@
           <div
             class="w-full h-px flex-1 bg-gray-200 group-last:hidden"
             [ngClass]="{
-              'bg-gray-700 ': activeStep >= 3
+              'bg-gray-700 ':
+                order?.status === 'SHIPPED' || order?.status === 'DELIVERED'
             }"
           ></div>
         </li>
@@ -146,7 +153,8 @@
             <span
               class="size-7 flex justify-center items-center flex-shrink-0 border bg-white-100 rounded-full"
               [ngClass]="{
-                'bg-gray-700 text-white': activeStep >= 3
+                'bg-gray-700 text-white':
+                  order?.status === 'SHIPPED' || order?.status === 'DELIVERED'
               }"
             >
               <svg
@@ -169,7 +177,8 @@
           <div
             class="w-full h-px flex-1 bg-gray-200 group-last:hidden"
             [ngClass]="{
-              'bg-gray-700 ': activeStep >= 3
+              'bg-gray-700 ':
+                order?.status === 'CANCELED' || order?.status === 'DELIVERED'
             }"
           ></div>
         </li>
@@ -183,7 +192,8 @@
             <span
               class="size-7 flex justify-center items-center flex-shrink-0 border bg-white-100 font-medium rounded-full"
               [ngClass]="{
-                'bg-gray-700 text-white': activeStep == 4
+                'bg-gray-700 text-white':
+                  order?.status === 'CANCELED' || order?.status === 'DELIVERED'
               }"
             >
               <svg
@@ -240,7 +250,7 @@
           }"
         >
           <div class="p-4">
-            <img class="w-20" [src]="getProductImage(item)" alt="" />
+            <img class="w-20" [src]="item.imageUrl" alt="" />
           </div>
           <div class="">
             {{ item.itemName }}
@@ -408,7 +418,6 @@
       </div>
 
       <!-- custom modal -->
-
       <div
         *ngIf="showModals[item.id ?? 0]"
         id="modal-{{ item.id }}"
@@ -715,7 +724,6 @@
 </div>
 
 <!-- custom return modal -->
-
 <div
   *ngIf="showReturnModal"
   id="feedback-modal"
@@ -775,7 +783,7 @@
               />
             </div>
             <div class="w-20 p-4">
-              <img [src]="getProductImage(item)" alt="" />
+              <img [src]="item.imageUrl" alt="" />
             </div>
             <div>{{ item.itemName }}</div>
             <div class="flex items-center">
@@ -892,7 +900,6 @@
 </div>
 
 <!-- custom replace modal -->
-
 <div
   *ngIf="showReplaceModal"
   id="feedback-modal"
@@ -952,7 +959,7 @@
               />
             </div>
             <div class="w-20 p-4">
-              <img [src]="getProductImage(item)" alt="" />
+              <img [src]="item.imageUrl" alt="" />
             </div>
             <div>{{ item.itemName }}</div>
             <div class="flex items-center">

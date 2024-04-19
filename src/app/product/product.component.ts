@@ -31,9 +31,11 @@ import { dropdownAnimationFade } from '../animations/dropdown-animation';
 export class ProductComponent implements OnInit {
   @HostBinding('@routeAnimationTrigger') routeAnimation = true;
 
+  findCssColorName = Utils.findCSSColorName;
   // toPascalCase = Utils.toPascalCase;
 
   showBrandDropdown: boolean = false;
+  showPageSizeDropdown: boolean = false;
   productType: string = '';
 
   sortBy: string = '';
@@ -43,7 +45,7 @@ export class ProductComponent implements OnInit {
 
   page?: ProductPage;
   currentPage: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 8;
   previousPage: number = 0;
   nextPage: number = 0;
   startIndex: number = 0;
@@ -64,6 +66,7 @@ export class ProductComponent implements OnInit {
   showSuccessToast: boolean = false;
   showFailureToast: boolean = false;
   showAddedToCartToast: boolean = false;
+  showSpinner: boolean = false;
 
   constructor(
     private router: Router,
@@ -74,6 +77,7 @@ export class ProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.showSpinner = true;
     this.route.paramMap
       .pipe(
         switchMap((params) => {
@@ -98,7 +102,6 @@ export class ProductComponent implements OnInit {
               keyword
             );
           } else {
-            console.log('type', this.productType);
             return this.productService.getProductsByType(
               this.productType,
               0,
@@ -144,6 +147,7 @@ export class ProductComponent implements OnInit {
         this.productColors = colors;
         this.productVariants = variants;
         this.dataLoaded = true;
+        this.showSpinner = false;
       });
   }
 
@@ -153,6 +157,7 @@ export class ProductComponent implements OnInit {
     sortBy?: string,
     sortOrder: 'asc' | 'desc' = 'asc'
   ) {
+    this.showSpinner = true;
     this.dataLoaded = false; // Reset data loading state
     this.currentPage = pageNumber;
 
@@ -212,6 +217,7 @@ export class ProductComponent implements OnInit {
         this.productVariants = variants;
 
         this.dataLoaded = true; // Indicate that data has finished loading
+        this.showSpinner = false;
       });
   }
 
@@ -230,7 +236,17 @@ export class ProductComponent implements OnInit {
   getColors(productId: number) {
     return this.productColors
       .filter((color) => color.productId === productId)
-      .map((color) => color.color.split(' ')[1]);
+      .map((color) =>
+        color.color.split(' ').length > 1
+          ? color.color.split(' ')[1]
+          : color.color
+      );
+  }
+
+  getCssColors(productId: number) {
+    return this.productColors
+      .filter((color) => color.productId === productId)
+      .map((color) => this.findCssColorName(color.color));
   }
 
   getProductPrice(productId: number) {
@@ -250,6 +266,11 @@ export class ProductComponent implements OnInit {
   getProductImage(productId: number) {
     const colorId = this.variantAndColor[productId][1];
     return this.productService.getProductImage(colorId);
+  }
+
+  getProductImageUrl(productId: number) {
+    const colorId = this.variantAndColor[productId][1];
+    return this.productColors.find((color) => color.id === colorId)?.image;
   }
 
   selectProductVariant(productId: number, selectedVariant: string) {
@@ -354,6 +375,7 @@ export class ProductComponent implements OnInit {
   }
 
   getPageOfSize(event: any) {
+    this.togglePageSizeDropdown();
     const size = event.target.dataset.value;
     if (size) {
       this.pageSize = size;
@@ -402,6 +424,13 @@ export class ProductComponent implements OnInit {
       this.showBrandDropdown = false;
     } else {
       this.showBrandDropdown = true;
+    }
+  }
+  togglePageSizeDropdown() {
+    if (this.showPageSizeDropdown) {
+      this.showPageSizeDropdown = false;
+    } else {
+      this.showPageSizeDropdown = true;
     }
   }
 

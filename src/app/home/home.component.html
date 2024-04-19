@@ -36,29 +36,34 @@
     ></span>
   </div>
 </div>
+<div class="bg-gray-50">
+  <div *ngIf="browsedItems.length" class="w-4/5 mx-auto">
+    <h2 class="text-2xl">Continue Browsing</h2>
+    <div class="grid grid-cols-4 gap-4">
+      <div
+        *ngFor="let product of browsedItems"
+        class="flex flex-row items-center"
+      >
+        <div class="flex items-center gap-4 bg-white rounded-t-lg">
+          <div class="w-40 p-4 relative lg:pt-[80%]">
+            <a
+              [routerLink]="['/product', product.productId]"
+              [queryParams]="{
+                color: product.colorId,
+                variant: product.variantId
+              }"
+            >
+              <img
+                class="size-full absolute top-0 object-contain object-center"
+                [src]="product.imageUrl"
+                alt=""
+              />
+            </a>
+          </div>
 
-<div class="w-4/5 mx-auto">
-  <h2 class="text-2xl">Continue Browsing</h2>
-  <div class="grid grid-cols-4 gap-4">
-    <div
-      *ngFor="let product of browsedItems"
-      class="flex flex-row items-center"
-    >
-      <div class="flex items-center p-4 bg-white rounded-t-lg">
-        <div class="">
-          <a
-            [routerLink]="['/product', product.id]"
-            [queryParams]="{
-              color: product.colors[0],
-              variant: product.variants[0]
-            }"
-          >
-            <img class="w-44" [src]="getProductImage(product)" alt="" />
-          </a>
-        </div>
-
-        <div class="text-center text-lg">
-          {{ product.brand }} {{ product.model }}
+          <div class="text-center text-lg">
+            {{ product.productName }}
+          </div>
         </div>
       </div>
     </div>
